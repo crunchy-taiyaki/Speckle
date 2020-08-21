@@ -8,19 +8,22 @@ files.read_input('C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src
 files.info()
 data = Data()
 
-#calc all data
-print('data calculation...')
-data.dark = middle_dark(files.dark,files.dark_frames)
-data.ref_dark = middle_dark(files.ref_dark,files.ref_dark_frames)
-data.flat = middle_flat(files.flat,files.flat_frames)
-data.star_ps = obj_ps(files.star,files.star_frames, data.dark, data.flat)
-data.ref_ps = obj_ps(files.ref,files.ref_frames, data.ref_dark, data.flat)
-print('all done!')
-data.save_to(files.data)
-print('data saved')
+##calc all data
+#print('data calculation...')
+#data.dark = middle_dark(files.dark,files.dark_frames)
+#data.ref_dark = middle_dark(files.ref_dark,files.ref_dark_frames)
+#data.flat = middle_flat(files.flat,files.flat_frames)
+#data.star_ps.values = obj_ps(files.star,files.star_frames, data.dark, data.flat)
+#data.ref_ps.values = obj_ps(files.ref,files.ref_frames, data.ref_dark, data.flat)
+#print('all done!')
+#data.save_to(files.data)
+#print('data saved')
 
 #read data from files
 data.read_from(files.data)
-data.final_power_spectrum()
+
+data.define_freq_bounds()
+data.rmbg()
+data.find_final_ps()
 data.save_to(files.data)
 print('all data saved')

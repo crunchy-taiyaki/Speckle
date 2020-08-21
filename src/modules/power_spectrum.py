@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def middle_dark(darkname,darkframes):
     print('-----------------DARK-----------------')
@@ -100,32 +101,82 @@ def remove_background(image, xlim):
     return clean_image
 
 
+class ObjSpectrum():
+    def __init__(self):
+        self.values = None
+        self.b_bound = None
+        self.up_bound = None
+        self.clean_ps = None
+
+    def define_bounds(self):
+        print('define frequence bound of spectrum')
+        #plot star power spectrum profile
+        plt.figure(figsize=(8,8))
+        plt.subplot(2,1,1)
+        plt.plot(self.values[256,:])
+        plt.yscale('log')
+        plt.xlim(256,512)
+        plt.title('x projection of spectrum')
+        plt.subplot(2,1,2)
+        plt.plot(self.values[:,256])
+        plt.yscale('log')
+        plt.xlim(256,512)
+        plt.title('y projection of spectrum')
+        plt.show(block=False)
+
+        #seting frequencies from console
+        x_bottom_freq = int(input('enter BOTTOM frequency (integer format) for X projection:'))
+        x_upper_freq = int(input('enter UPPER frequency (integer format) for X projection:'))
+        y_bottom_freq = int(input('enter BOTTOM frequency (integer format) for Y projection:'))        
+        y_upper_freq = int(input('enter UPPER frequency (integer format) for Y projection:'))
+
+        #compute frequence bounds
+        self.b_bound = np.max([x_bottom_freq,y_bottom_freq])
+        self.up_bound = np.max([x_upper_freq,y_upper_freq])
+
+    def rmbg(self):
+        self.clean_ps = remove_background(self.values, self.up_bound)
+
+
+
 class Data():
 
     def __init__(self):
-        self.star_ps = None
+        self.star_ps = ObjSpectrum()
         self.dark = None
         self.ref_dark = None
         self.flat = None
-        self.ref_ps = None
-        self.final_ps = None
+        self.ref_ps = ObjSpectrum()
+        self.final_ps = ObjSpectrum()
 
     def save_to(self,result_folder_path):
         path = result_folder_path
         np.save(path + '\\mean_dark.npy',self.dark)
         np.save(path + '\\mean_flat.npy',self.flat)
-        np.save(path + '\\mean_star_ps.npy',self.star_ps)
-        np.save(path + '\\mean_ref_ps.npy',self.ref_ps)
-        np.save(path + '\\final_ps.npy',self.final_ps)
+        np.save(path + '\\mean_star_ps.npy',self.star_ps.values)
+        np.save(path + '\\mean_ref_ps.npy',self.ref_ps.values)
+        np.save(path + '\\final_ps.npy',self.final_ps.values)
+        np.save(path + '\\final_rmbg_ps.npy',self.final_ps.clean_ps)
 
     def read_from(self,result_folder_path):
         path = result_folder_path
         self.dark = np.load(path + '\\mean_dark.npy')
         self.flat = np.load(path + '\\mean_flat.npy')
-        self.star_ps = np.load(path + '\\mean_star_ps.npy')
-        self.ref_ps = np.load(path + '\\mean_ref_ps.npy')
-        self.final_ps = np.load(path + '\\final_ps.npy')
+        self.star_ps.values = np.load(path + '\\mean_star_ps.npy')
+        self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
+        self.final_ps.values = np.load(path + '\\final_ps.npy')
+        self.final_ps.clean_ps = np.load(path + '\\final_rmbg_ps.npy')
 
-    def final_power_spectrum(self):
-        self.final_ps = self.star_ps/self.ref_ps
+    def define_freq_bounds(self):
+        self.star_ps.define_bounds()
+        self.ref_ps.define_bounds()
+
+    def rmbg(self):
+        self.star_ps.rmbg()
+        self.ref_ps.rmbg()
+
+    def find_final_ps(self):
+        self.final_ps.values = self.star_ps.values/self.ref_ps.values
+        # with background removing
+        self.final_ps.clean_ps = self.star_ps.clean_ps/self.ref_ps.clean_ps
 
