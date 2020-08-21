@@ -1,0 +1,27 @@
+# TEST1 binary star
+# star
+D:\Speckle_data\model\EXPERIMENT\TEST1.dat
+# star frames number
+100
+# dark
+-
+# dark frames number
+0
+# flat
+-
+# flat frames number
+0
+# reference star
+D:\Speckle_data\model\reference.dat
+# reference frames number
+2000
+# reference dark
+-
+# reference dark frames number
+0
+# store all images to folder
+D:\Speckle_data\model\result\images
+# store all data, arrays to folder
+D:\Speckle_data\model\result\data
+# working directory
+-

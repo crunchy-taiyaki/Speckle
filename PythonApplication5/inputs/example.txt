@@ -1,0 +1,32 @@
+# INPUT FILE EXAMPLE
+# all comment lines should start with "#"
+# please set all input parameters in right odder
+# set "-" for empty names and "0" for numbers
+#
+# star
+C:\my_folder\my_star_filename
+# star frames number
+1000
+# dark
+C:\my_folder\my_dark_filename
+# dark frames number
+1000
+# flat
+C:\my_folder\my_flat_filename
+# flat frames number
+1000
+# reference star
+C:\my_folder\my_reference_star_filename
+# reference frames number
+1000
+# reference dark
+C:\my_folder\my_reference_dark_filename
+# reference dark number
+1000
+#
+# store all images to folder
+C:\my_folder\my_image_folder
+# store data to folder
+C:\my_folder\my_data_folder
+# working directory
+C:\my_folder\my_working_directory
