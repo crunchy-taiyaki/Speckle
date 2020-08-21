@@ -76,7 +76,7 @@ class Application(tk.Frame):
 
 
 files = DataFiles()
-files.read_input('C:\\Users\\Marta\\source\\repos\\PythonApplication5\\PythonApplication5\\inputs\\TEST_star_input.txt')
+files.read_input('C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TEST_star_input.txt')
 files.info()
 data = Data()
 #read data from files

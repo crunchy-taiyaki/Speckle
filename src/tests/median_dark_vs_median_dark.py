@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\modules")
 import numpy as np
 import matplotlib.pyplot as plt
 from power_spectrum import *
