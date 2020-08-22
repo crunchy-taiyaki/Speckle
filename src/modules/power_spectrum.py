@@ -95,10 +95,13 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
         return dark_ps
 
 def remove_background(image, xlim):
-    outbound = image[xlim:512,0:512]
-    slice_out = np.mean(image, axis=0)
-    clean_image = image - slice_out
-    return clean_image
+    if (xlim==512):
+        return image
+    else:
+        outbound = image[xlim:512,0:512]
+        slice_out = np.mean(image, axis=0)
+        clean_image = image - slice_out
+        return clean_image
 
 
 class ObjSpectrum():
@@ -157,6 +160,17 @@ class Data():
         np.save(path + '\\mean_ref_ps.npy',self.ref_ps.values)
         np.save(path + '\\final_ps.npy',self.final_ps.values)
         np.save(path + '\\final_rmbg_ps.npy',self.final_ps.clean_ps)
+        np.save(path + '\\freq_bound.npy',np.array([self.star_ps.b_bound,self.star_ps.up_bound,\
+                                                    self.ref_ps.b_bound,self.ref_ps.up_bound,\
+                                                    self.final_ps.b_bound,self.final_ps.up_bound\
+            ]))
+
+    def read_raw_data_from(self,result_folder_path):
+        path = result_folder_path
+        self.dark = np.load(path + '\\mean_dark.npy')
+        self.flat = np.load(path + '\\mean_flat.npy')
+        self.star_ps.values = np.load(path + '\\mean_star_ps.npy')
+        self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
 
     def read_from(self,result_folder_path):
         path = result_folder_path
@@ -166,6 +180,13 @@ class Data():
         self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
         self.final_ps.values = np.load(path + '\\final_ps.npy')
         self.final_ps.clean_ps = np.load(path + '\\final_rmbg_ps.npy')
+        freq_bounds = np.load(path + '\\freq_bound.npy')
+        self.star_ps.b_bound = freq_bounds[0]
+        self.star_ps.up_bound = freq_bounds[1]
+        self.ref_ps.b_bound = freq_bounds[2]
+        self.ref_ps.up_bound = freq_bounds[3]
+        self.final_ps.b_bound = freq_bounds[4]
+        self.final_ps.up_bound = freq_bounds[5]
 
     def define_freq_bounds(self):
         self.star_ps.define_bounds()
@@ -179,4 +200,6 @@ class Data():
         self.final_ps.values = self.star_ps.values/self.ref_ps.values
         # with background removing
         self.final_ps.clean_ps = self.star_ps.clean_ps/self.ref_ps.clean_ps
+        self.final_ps.b_bound = np.max([self.star_ps.b_bound,self.ref_ps.b_bound])
+        self.final_ps.up_bound = np.min([self.star_ps.up_bound,self.ref_ps.up_bound])
 

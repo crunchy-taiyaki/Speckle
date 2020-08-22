@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from initial_parameters import *
 from power_spectrum import *
+from plot import define_ylim
 
 files = DataFiles()
 files.read_input('C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TEST_star_input.txt')
@@ -23,23 +24,27 @@ data.read_from(files.data)
 #plt.title('flat')
 
 plt.figure()
-plt.imshow(data.ref_ps.values, cmap='gray',vmin=np.min(data.ref_ps.values),vmax=np.max(data.ref_ps.values)/1e6)
+vmin,vmax = define_ylim(data.ref_ps)
+plt.imshow(data.ref_ps.values, cmap='gray',vmin=vmin,vmax=vmax/10)
 plt.title('ref')
 plt.savefig(files.images + '\\ref_ps.png')
 
 plt.figure()
-plt.imshow(data.star_ps.values, cmap='gray',vmin=np.min(data.star_ps.values),vmax=np.max(data.star_ps.values)/1e8)
-plt.title('obj')
+vmin,vmax = define_ylim(data.star_ps)
+plt.imshow(data.star_ps.values, cmap='gray',vmin=vmin,vmax=vmax/10)
+plt.title('star')
 plt.savefig(files.images + '\\star_ps.png')
 
 plt.figure()
-plt.imshow(data.final_ps.values, cmap='gray',vmin=0,vmax=0.02)
-plt.title('obj/ref')
+vmin,vmax = define_ylim(data.final_ps)
+plt.imshow(data.final_ps.values, cmap='gray',vmin=vmin,vmax=vmax)
+plt.title('final ps')
 plt.savefig(files.images + '\\final_ps.png')
 
 plt.figure()
-plt.imshow(data.final_ps.clean_ps, cmap='gray',vmin=0,vmax=0.02)
-plt.title('rmbg obj/ref')
+vmin,vmax = define_ylim(data.final_ps)
+plt.imshow(data.final_ps.clean_ps, cmap='gray',vmin=vmin,vmax=vmax)
+plt.title('rmbg final ps')
 plt.savefig(files.images + '\\final_rmbg_ps.png')
 plt.show()
 

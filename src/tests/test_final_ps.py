@@ -20,8 +20,7 @@ data = Data()
 #print('data saved')
 
 #read data from files
-data.read_from(files.data)
-
+data.read_raw_data_from(files.data)
 data.define_freq_bounds()
 data.rmbg()
 data.find_final_ps()
