@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def middle_dark(darkname,darkframes):
     print('-----------------DARK-----------------')
     if (darkname == None):

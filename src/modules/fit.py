@@ -13,6 +13,12 @@ def ring_mask(img, r1, r2):
     img_masked_ring = np.ma.array(img_masked_ring, mask = mask1)
     return img_masked_ring
 
+def define_ylim(image):
+    masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
+    ymin = np.min(masked_image)
+    ymax = np.max(masked_image)
+    return ymin,ymax
+
 class BinaryInitialParameters:
 
     def __init__(self,dm21,x2,y2):
@@ -85,7 +91,7 @@ class Fit:
         self.bandwidth = bandwidth
         self.bottom_freq_border = bottom_freq_border
         self.upper_freq_border = upper_freq_border
-        self.ps = ps
+        self.ps = ps #ObjSpectrum()
         self.init_guess = initial_parameters
         self.model = model
         self.uv_grid = uv_grid
@@ -95,9 +101,8 @@ class Fit:
     def ring_zones(self,zones):
         f_ar_lenght = len(self.result.f_ar)
         for i in range(f_ar_lenght):
-            zones[i] = ring_mask(self.ps,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
-            a = ring_mask(self.ps,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
-
+            zones[i] = ring_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
+ 
     def plot_zone(self,zone):
         plt.figure()
         plt.plot(zone[256,:])
@@ -107,10 +112,23 @@ class Fit:
     def plot_fit_izone(self,i,zone_values):
         u,v = self.uv_grid
         plt.figure()
+        plt.plot(self.ps.values[256,:],label='all data')
         plt.plot(zone_values[256,:],label='data')
         plt.plot(self.model(u,v,*self.init_guess.array())[256,:], label='init guess')
         plt.plot(self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[256,:],label='model')
+        ymin,ymax = define_ylim(self.ps)
+        plt.ylim(ymin,ymax)
         plt.title('x projection')
+        plt.legend()
+
+        plt.figure()
+        plt.plot(self.ps.values[:,256],label='all data')
+        plt.plot(zone_values[:,256],label='data')
+        plt.plot(self.model(u,v,*self.init_guess.array())[:,256], label='init guess')
+        plt.plot(self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[:,256],label='model')
+        ymin,ymax = define_ylim(self.ps)
+        plt.ylim(ymin,ymax)
+        plt.title('y projection')
         plt.legend()
         plt.show()
 

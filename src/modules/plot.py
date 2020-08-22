@@ -8,6 +8,16 @@ def define_ylim(image):
     ymax = np.max(masked_image)
     return ymin,ymax
 
+def slice_image(image,x1,y1,x2,y2):
+    size = image.values.shape[0]
+    projection = np.ones(size)*np.nan
+    k = (y2-y1)/(x2-x1)
+    for x in range(0, size):
+        y = int(x*k-x2*k+y2)
+        if y < 512 and y>0:
+            projection[x] = image.values[x,y]
+    return projection
+
 
 
 

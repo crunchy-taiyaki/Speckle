@@ -16,12 +16,11 @@ files.info()
 #read data from files
 data = Data()
 data.read_from(files.data)
-y0 = data.final_ps.values
 model = Models.binary
-initial_parameters = BinaryInitialParameters(dm21=1.,x2=253.546,y2=253.277)
+initial_parameters = BinaryInitialParameters(dm21=1.,x2=253.6,y2=253.277)
 uv_grid = Grid(size=512).uv_meshgrid()
 bottom_freq_border = data.final_ps.b_bound
 upper_freq_border = data.final_ps.up_bound
-fit = Fit(data.final_ps.values,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth=5,flag='binary')
+fit = Fit(data.final_ps,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border=420,bandwidth=5,flag='binary')
 fit.fit_i_xy_dm()
 fit.save_i_xy_dm_freq(files.data)

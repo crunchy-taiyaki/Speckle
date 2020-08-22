@@ -20,14 +20,14 @@ fit_result.read_i_xy_dm_freq_from(files.data)
 #normality test
 print('--------------NORMALITY TEST-------------------')
 print('dm21')
-shapiro_wilk_test(np.where(fit_result.dm21_ar < 6))
+shapiro_wilk_test(np.where(fit_result.dm21_ar < 6.0))
 print('x2')
-shapiro_wilk_test(np.where(fit_result.x2_ar > 252.0))
+shapiro_wilk_test(np.where(fit_result.x2_ar < 254.0))
 print('y2')
 shapiro_wilk_test(np.where(fit_result.y2_ar > 252.0))
 
 #plot histograms
-bins = 50
+bins = 30
 plt.figure()
 plt.hist(fit_result.dm21_ar, bins)
 plt.title('dm21_hist')
