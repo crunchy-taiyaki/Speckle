@@ -57,6 +57,40 @@ class Grid:
         u,v = np.meshgrid(U,V)
         return u,v
 
+class FitParameters():
+    def __init__(self):
+        self.flag = None
+        self.dm21 = None
+        self.x2 = None
+        self.y2 = None
+        self.dm31 = None
+        self.x3 = None
+        self.y3 = None
+        self.b_freq_border = None
+        self.up_freq_border = None
+        self.bandwidth = None
+
+    def read_input(self,file):
+        info = []
+        with open(file, 'r') as input:
+            for line in input:
+                text = line.strip()
+                if text.startswith('#'):
+                    continue
+                info.append(text)
+        self.flag = info[0]
+        self.dm21 = float(info[1])
+        self.x2 = float(info[2])
+        self.y2 = float(info[3])
+        if (self.flag == 'triple'):
+            self.dm31 = float(info[4])
+            self.x3 = float(info[5])
+            self.y3 = float(info[6])
+        self.b_freq_border = int(info[7])
+        self.up_freq_border = int(info[8])
+        self.bandwidth = int(info[9])
+
+
 class FitResult():
     def __init__(self,flag):
         self.flag = flag
@@ -131,7 +165,6 @@ class Fit:
         plt.title('y projection')
         plt.legend()
         plt.show()
-
 
     def fit_i_xy_dm(self):
 
