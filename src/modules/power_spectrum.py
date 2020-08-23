@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from masks import ring_mask
 
 
 def middle_dark(darkname,darkframes):
@@ -95,14 +96,16 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
         imagedark=None
         return dark_ps
 
-def remove_background(image, xlim):
-    if (xlim==512):
+def remove_background(image,freq_border):
+    if (freq_border==512*np.sqrt(2)):
         return image
     else:
-        outbound = image[xlim:512,0:512]
-        slice_out = np.mean(image, axis=0)
+        frame_edge = 512*np.sqrt(2)
+        background = ring_mask(image,freq_border,frame_edge)
+        slice_out = np.mean(background)
         clean_image = image - slice_out
         return clean_image
+
 
 
 class ObjSpectrum():
