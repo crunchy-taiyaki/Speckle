@@ -1,4 +1,3 @@
-from numpy import NaN
 class  DataFiles():
     def __init__(self):
         self.star = None

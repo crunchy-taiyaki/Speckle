@@ -2,10 +2,9 @@ import sys
 sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\modules")
 import numpy as np
 import matplotlib.pyplot as plt
-from initial_parameters import *
-from power_spectrum import *
+from initial_parameters import DataFiles
 from models import Models
-from fit import *
+from fit import FitResult
 from stats import shapiro_wilk_test
 
 #read config file

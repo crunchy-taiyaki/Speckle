@@ -7,8 +7,8 @@ from matplotlib.figure import Figure
 import tkinter as tk
 import tkinter.ttk as ttk
 import sys
-from initial_parameters import *
-from power_spectrum import *
+from initial_parameters import DataFiles
+from power_spectrum import Data
 
 class Application(tk.Frame):
     def __init__(self, master=None, data=None, files=None):

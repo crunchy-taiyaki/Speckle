@@ -2,8 +2,8 @@ import sys
 sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\modules")
 import numpy as np
 import matplotlib.pyplot as plt
-from initial_parameters import *
-from power_spectrum import *
+from initial_parameters import DataFiles
+from power_spectrum import Data
 from plot import define_ylim
 
 files = DataFiles()
