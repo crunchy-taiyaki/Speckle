@@ -27,12 +27,12 @@ def show_stats(filename_config,fit_parameters_config):
     mask_up = fit_result.f_ar < data.final_ps.up_bound
 
     #mask for dm
-    dm_mask = np.logical_and(fit_result.f_ar > 330, fit_result.f_ar < 372)
+    #dm_mask = np.logical_and(fit_result.f_ar > 330, fit_result.f_ar < 372)
 
 
     #masking results
-    #dm21 = fit_result.dm21_ar[mask_down_up]
-    dm21 = fit_result.dm21_ar[dm_mask]
+    dm21 = fit_result.dm21_ar[mask_down_up]
+    #dm21 = fit_result.dm21_ar[dm_mask]
     x2 = fit_result.x2_ar[mask_up]
     y2 = fit_result.y2_ar[mask_up]
     if (input_fit_parameters.flag == 'triple'):
@@ -52,13 +52,13 @@ def show_stats(filename_config,fit_parameters_config):
     #_________________x2____________________________________
     print('x2')
     shapiro_wilk_test(x2)
-    shapiro_wilk_test(np.where(x2 < 254.0))
+    #shapiro_wilk_test(np.where(x2 < 254.0))
     print('x2 std:', np.std(x2))
 
     #_________________y2____________________________________
     print('y2')
     shapiro_wilk_test(y2)
-    shapiro_wilk_test(np.where(y2 > 253.0))
+    #shapiro_wilk_test(np.where(y2 > 253.0))
     print('y2 std:', np.std(y2))
 
     if (input_fit_parameters.flag == 'triple'):
@@ -108,4 +108,6 @@ def show_stats(filename_config,fit_parameters_config):
 
     plt.show()
 
-
+filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_input.txt'
+fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_fit_parameters.txt'
+show_stats(filename_config,fit_parameters_config)
