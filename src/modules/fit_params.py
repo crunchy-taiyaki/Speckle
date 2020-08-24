@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from initial_parameters import DataFiles
 from power_spectrum import Data
 from models import Models
-from fit import FitParameters, Fit
+from fit import FitParameters, Fit, BinaryInitialParameters, TripleInitialParameters, Grid
 
 def fit_i_xy_dm(filename_config, fit_parameters_config):
 

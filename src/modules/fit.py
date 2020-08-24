@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
-from masks import ring_masks
+from masks import ring_mask
 
 def define_ylim(image):
     masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
