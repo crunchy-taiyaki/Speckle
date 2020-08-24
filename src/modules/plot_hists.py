@@ -107,7 +107,3 @@ def show_stats(filename_config,fit_parameters_config):
         plt.savefig(files.images + '\\y3_hist.png')
 
     plt.show()
-
-filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_input.txt'
-fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_fit_parameters.txt'
-show_stats(filename_config,fit_parameters_config)

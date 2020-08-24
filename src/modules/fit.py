@@ -207,7 +207,7 @@ class Fit:
                 self.result.dm21_ar[i] = fit_result.x[1]
                 self.result.x2_ar[i] = fit_result.x[2]
                 self.result.y2_ar[i] = fit_result.x[3]
-            #self.plot_fit_izone(i,zone_values)
+            self.plot_fit_izone(i,zone_values)
 
     def save_i_xy_dm_freq(self,result_folder_path):
         path = result_folder_path

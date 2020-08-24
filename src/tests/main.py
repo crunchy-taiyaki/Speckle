@@ -19,6 +19,6 @@ fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speck
 #plot_dark_flat_and_spectra_image(filename_config)
 #plot_projections(filename_config)
 #plot_acf(filename_config)
-#fit_i_xy_dm(filename_config, fit_parameters_config)
+fit_i_xy_dm(filename_config, fit_parameters_config)
 #plot_fitted_i_xy_dm(filename_config)
-show_stats(filename_config,fit_parameters_config)
+#show_stats(filename_config,fit_parameters_config)
