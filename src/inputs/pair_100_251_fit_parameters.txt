@@ -1,22 +1,46 @@
-#flag
+ #flag
 binary
 #dm21
 1.0
+#dm21_bottom_border
+0.0
+#dm21_upper_border
+1.7
 #x2
 237.0
+#x2_bottom_border
+236.0
+#x2_upper_border
+238.0
 #y2
 252.0
+#y2_bottom_border
+251.0
+#y2_upper_border
+252.6
 #dm31
+-
+#dm31_bottom_border
+-
+#dm31_upper_border
 -
 #x3
 -
+#x3_bottom_border
+-
+#x3_upper_border
+-
 #y3
+-
+#y3_bottom_border
+-
+#y3_upper_border
 -
 #bottom freq border
 256
 #upper freq border
 512
 #bandwidth
-10
+5
 #amplitude freq borders
-#dm21 freq border
+#dm21 freq border (375)
