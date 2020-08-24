@@ -1,5 +1,5 @@
 from initial_parameters import DataFiles
-from power_spectrum import Data
+from power_spectrum import Data, middle_dark,middle_flat,obj_ps
 
 def objects_spectra_preproc(filename_config):
 
