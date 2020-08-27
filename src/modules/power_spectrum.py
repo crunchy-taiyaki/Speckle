@@ -3,6 +3,16 @@ import matplotlib.pyplot as plt
 from masks import ring_mask
 
 
+def middle_fft(imagename,imageframes):
+    images = np.memmap(imagename,mode='r', dtype='uint16', shape=(imageframes,512,512))
+    middle_fft = np.zeros((512,512))
+    for i in range(imageframes):
+        middle_fft = middle_fft + np.fft.fft(images[i])
+    middle_fft /= imageframes
+    images = None
+    return middle_fft
+
+
 def middle_dark(darkname,darkframes):
     print('-----------------DARK-----------------')
     if (darkname == None):
