@@ -25,3 +25,10 @@ def plot_acf(filename_config):
     plt.savefig(files.images + '\\acf final_ps.png')
     plt.show()
 
+def guess_xy(filename_config):
+    plot_acf(filename_config)
+    x = float(input('enter x:'))
+    y = float(input('enter y:'))
+    print('please write to config..')
+    print('x2 =', y-256, 'y2 = ', x-256)
+
