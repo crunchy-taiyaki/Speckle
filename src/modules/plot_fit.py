@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from initial_parameters import DataFiles
 from power_spectrum import Data
 from models import Models
-from fit import FitResult
+from fit import FitParameters, FitResult
 from plot import slice_image, define_ylim, plot_rings_borders
 
 def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
@@ -13,12 +13,16 @@ def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
     files.read_input(filename_config)
     files.info()
 
+    #read fit parameters from file
+    input_fit_parameters = FitParameters()
+    input_fit_parameters.read_input(fit_parameters_config)
+
     #read data from files
     data = Data()
     data.read_from(files.data)
 
     #read i xy dm from files
-    fit_result = FitResult('binary')
+    fit_result = FitResult(input_fit_parameters.flag)
     fit_result.read_i_xy_dm_freq_from(files.data)
 
     if rmbg_flag=='rmbg':
