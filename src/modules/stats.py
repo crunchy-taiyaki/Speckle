@@ -162,8 +162,37 @@ def clean_stats(filename_config,fit_parameters_config):
         plt.title('mask y3_hist')
         plt.savefig(files.images + '\\y3_hist_mask.png')
 
-    plt.show()
+    plt.show(filename_config,fit_parameters_config)
 
+def plot_residuals(filename_config,fit_parameters_config,rmbg_flag):
+    #read config file
+    files = DataFiles()
+    files.read_input(filename_config)
+    files.info()
+
+    #read data from files
+    data = Data()
+    data.read_from(files.data)
+
+    #read fit parameters config
+    input_fit_parameters = FitParameters()
+    input_fit_parameters.read_input(fit_parameters_config)
+
+    #read i xy dm from files
+    fit_result = FitResult(input_fit_parameters.flag)
+    fit_result.read_i_xy_dm_freq_from(files.data)
+
+    if rmbg_flag=='rmbg':
+        fitted_data = data.rmbg_final_ps
+    else:
+        fitted_data = data.final_ps
+
+    plt.figure()
+    plt.scatter(fit_result.f_ar, fit_result.residuals)
+    plt.axvline(fitted_data.b_bound, color='orange')
+    plt.axvline(fitted_data.up_bound, color='orange')
+    plt.savefig(files.images + '\\residuals.png')
+    plt.show()
 
 def normality_test(filename_config,fit_parameters_config):
 

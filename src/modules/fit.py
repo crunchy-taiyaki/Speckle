@@ -112,6 +112,7 @@ class FitResult():
     def __init__(self,flag):
         self.flag = flag
         self.f_ar = None
+        self.residuals = None
         self.I1_ar = None
         self.dm21_ar = None
         self.x2_ar = None
@@ -132,10 +133,13 @@ class FitResult():
         self.x2_ar = np.load(path + '\\x2_ar.npy')
         self.y2_ar = np.load(path + '\\y2_ar.npy')
         self.f_ar = np.load(path + '\\f_ar.npy')
+        self.residuals = np.load(path + '\\residuals.npy')
         if(self.flag=='triple'):
             self.dm31_ar = np.load(path + '\\dm31_ar.npy')
             self.x3_ar = np.load(path + '\\x3_ar.npy')
             self.y3_ar = np.load(path + '\\y3_ar.npy')
+
+
 
 class Fit:
     def __init__(self,ps,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth=10,flag='triple'):
@@ -203,6 +207,7 @@ class Fit:
         self.result.dm21_ar = np.zeros(f_ar_lenght)
         self.result.x2_ar = np.zeros(f_ar_lenght)
         self.result.y2_ar = np.zeros(f_ar_lenght)
+        self.result.residuals = np.zeros(f_ar_lenght)
 
         if(self.flag == 'triple'):
             self.result.dm31_ar = np.zeros(f_ar_lenght)
@@ -230,11 +235,16 @@ class Fit:
                 self.result.y2_ar[i] = fit_result.x[4]
                 self.result.x3_ar[i] = fit_result.x[5]
                 self.result.y3_ar[i] = fit_result.x[6]
+                self.result.residuals[i] = np.sum((self.model(u,v,\
+                                                   self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
+                                                   self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])-zone_values)**2)
             else:
                 self.result.I1_ar[i] = fit_result.x[0]
                 self.result.dm21_ar[i] = fit_result.x[1]
                 self.result.x2_ar[i] = fit_result.x[2]
                 self.result.y2_ar[i] = fit_result.x[3]
+                self.result.residuals[i] = np.sum((self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])- zone_values)**2)
+
             #self.plot_fit_izone(i,zone_values)
 
     def save_i_xy_dm_freq(self,result_folder_path):
@@ -244,6 +254,7 @@ class Fit:
         np.save(path + '\\x2_ar.npy',self.result.x2_ar)
         np.save(path + '\\y2_ar.npy',self.result.y2_ar)
         np.save(path + '\\f_ar.npy',self.result.f_ar)
+        np.save(path + '\\residuals.npy',self.result.residuals)
         if(self.flag=='triple'):
             np.save(path + '\\dm31_ar.npy',self.result.dm31_ar)
             np.save(path + '\\x3_ar.npy',self.result.x3_ar)

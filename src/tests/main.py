@@ -7,7 +7,7 @@ from fit_params import fit_i_xy_dm
 from find_xy import guess_xy
 from plot_fit import plot_fitted_i_xy_dm
 from plot_projections import plot_projections
-from stats import clean_stats, normality_test, dm_xy_result
+from stats import plot_residuals, normality_test, dm_xy_result
 from plot_images import plot_dark_flat_and_spectra_image
 
 filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_input.txt'
@@ -21,6 +21,6 @@ fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speck
 #guess_xy(filename_config)
 #fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg')
 #plot_fitted_i_xy_dm(filename_config,fit_parameters_config,'rmbg')
-#clean_stats(filename_config,fit_parameters_config)
+plot_residuals(filename_config,fit_parameters_config,'rmbg')
 #normality_test(filename_config,fit_parameters_config)
 dm_xy_result(filename_config,fit_parameters_config)
