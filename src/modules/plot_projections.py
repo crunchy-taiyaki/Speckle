@@ -16,12 +16,14 @@ def plot_projections(filename_config):
     data.read_from(files.data)
 
     ###plot spectra for finding bound freq
+    freq_axis = np.arange(-256.0,256.0)
+
     #plt.figure()
-    #plt.plot(data.dark[256,:])
+    #plt.plot(freq_axis, data.dark[256,:])
     #plt.title('dark x')
 
     #plt.figure()
-    #plt.plot(data.dark[:,256])
+    #plt.plot(freq_axis, data.dark[:,256])
     #plt.title('dark y')
 
     #plt.figure()
@@ -29,11 +31,11 @@ def plot_projections(filename_config):
     #plt.title('flat x')
 
     #plt.figure()
-    #plt.plot(data.flat[:,256])
+    #plt.plot(freq_axis, data.flat[:,256])
     #plt.title('flat y')
 
     plt.figure()
-    plt.plot(data.ref_ps.values[256,:])
+    plt.plot(freq_axis, data.ref_ps.values[256,:])
     plt.yscale('log')
     ymin,ymax = define_ylim(data.ref_ps)
     #plt.ylim(ymin,ymax)
@@ -41,7 +43,7 @@ def plot_projections(filename_config):
     plt.savefig(files.images + '\\ref_ps_x.png')
 
     plt.figure()
-    plt.plot(data.ref_ps.values[:,256])
+    plt.plot(freq_axis, data.ref_ps.values[:,256])
     plt.yscale('log')
     ymin,ymax = define_ylim(data.ref_ps)
     #plt.ylim(ymin,ymax)
@@ -49,7 +51,7 @@ def plot_projections(filename_config):
     plt.savefig(files.images + '\\ref_ps_y.png')
 
     plt.figure()
-    plt.plot(data.star_ps.values[256,:])
+    plt.plot(freq_axis, data.star_ps.values[256,:])
     plt.yscale('log')
     ymin,ymax = define_ylim(data.star_ps)
     #plt.ylim(ymin,ymax)
@@ -57,7 +59,7 @@ def plot_projections(filename_config):
     plt.savefig(files.images + '\\star_ps_x.png')
 
     plt.figure()
-    plt.plot(data.star_ps.values[:,256])
+    plt.plot(freq_axis, data.star_ps.values[:,256])
     plt.yscale('log')
     ymin,ymax = define_ylim(data.star_ps)
     #plt.ylim(ymin,ymax)
@@ -65,14 +67,14 @@ def plot_projections(filename_config):
     plt.savefig(files.images + '\\star_ps_y.png')
 
     plt.figure()
-    plt.plot(data.final_ps.values[256,:])
+    plt.plot(freq_axis, data.final_ps.values[256,:])
     plt.title('final ps x')
     ymin,ymax = define_ylim(data.final_ps)
     plt.ylim(ymin,ymax)
     plt.savefig(files.images + '\\final_ps_x.png')
 
     plt.figure()
-    plt.plot(data.final_ps.values[:,256])
+    plt.plot(freq_axis, data.final_ps.values[:,256])
     plt.title('final ps y')
     ymin,ymax = define_ylim(data.final_ps)
     plt.ylim(ymin,ymax)

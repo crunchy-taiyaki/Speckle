@@ -126,18 +126,19 @@ class ObjSpectrum():
         self.clean_ps = None
 
     def define_bounds(self):
+        freq_axis = np.arange(256.0)
         print('define frequence bound of spectrum')
         #plot star power spectrum profile
         plt.figure(figsize=(8,8))
         plt.subplot(2,1,1)
-        plt.plot(self.values[256,:])
+        plt.plot(freq_axis,self.values[256,256:])
         plt.yscale('log')
-        plt.xlim(256,512)
+        plt.xlim(0,256)
         plt.title('x projection of spectrum')
         plt.subplot(2,1,2)
-        plt.plot(self.values[:,256])
+        plt.plot(freq_axis,self.values[256:,256])
         plt.yscale('log')
-        plt.xlim(256,512)
+        plt.xlim(0,256)
         plt.title('y projection of spectrum')
         plt.show(block=False)
 
