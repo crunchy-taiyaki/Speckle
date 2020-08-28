@@ -42,8 +42,8 @@ class Grid:
         self.size = size
 
     def uv_meshgrid(self):
-        U = np.arange(0,self.size)/self.size
-        V = np.arange(0,self.size)/self.size
+        U = np.arange(0,self.size)/self.size - 0.5
+        V = np.arange(0,self.size)/self.size -0.5
         u,v = np.meshgrid(U,V)
         return u,v
 
@@ -273,13 +273,12 @@ class Fit:
             self.result.y3_ar = np.load(path + '\\y3_ar.npy')
 
     def xy_to_r_psi(self):
-        x1 = 256.
-        y1 = 256.
+        #x1 = 0; y1 = 0
         if(self.flag=='triple'):
-            self.result.r13_ar = np.sqrt((self.result.x3_ar-x1)**2 + (self.result.y3_ar-y1)**2)
-            self.result.psi3_ar = np.arctan2(self.result.y3_ar-y1,self.result.x3_ar-x1)*180.0/np.pi
-        self.result.r12_ar = np.sqrt((self.result.x2_ar-x1)**2 + (self.result.y2_ar-y1)**2)
-        self.result.psi2_ar = np.arctan2(self.result.y2_ar-y1,self.result.x2_ar-x1)*180.0/np.pi
+            self.result.r13_ar = np.sqrt((self.result.x3_ar)**2 + (self.result.y3_ar)**2)
+            self.result.psi3_ar = np.arctan2(self.result.y3_ar,self.result.x3_ar)*180.0/np.pi
+        self.result.r12_ar = np.sqrt((self.result.x2_ar)**2 + (self.result.y2_ar)**2)
+        self.result.psi2_ar = np.arctan2(self.result.y2_ar,self.result.x2_ar)*180.0/np.pi
 
  
 
