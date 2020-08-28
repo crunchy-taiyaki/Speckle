@@ -4,7 +4,7 @@ from initial_parameters import DataFiles
 from power_spectrum import Data
 from models import Models
 from fit import FitResult
-from plot import slice_image, define_ylim
+from plot import slice_image, define_ylim, plot_rings_borders
 
 def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
 
