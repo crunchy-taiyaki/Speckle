@@ -42,8 +42,8 @@ def plot_dark_flat_and_spectra_image(filename_config):
     plt.savefig(files.images + '\\final_ps.png')
 
     plt.figure()
-    vmin,vmax = define_ylim(data.final_ps)
-    plt.imshow(data.final_ps.clean_ps, cmap='gray',vmin=vmin,vmax=vmax)
+    vmin,vmax = define_ylim(data.rmbg_final_ps)
+    plt.imshow(data.rmbg_final_ps.values, cmap='gray',vmin=vmin,vmax=vmax)
     plt.title('rmbg final ps')
     plt.savefig(files.images + '\\final_rmbg_ps.png')
     plt.show()

@@ -5,7 +5,7 @@ from power_spectrum import Data
 from models import Models
 from fit import FitParameters, Fit, BinaryInitialParameters, TripleInitialParameters, Grid
 
-def fit_i_xy_dm(filename_config, fit_parameters_config):
+def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag):
 
     #read config file
     files = DataFiles()
@@ -33,7 +33,11 @@ def fit_i_xy_dm(filename_config, fit_parameters_config):
     bottom_freq_border = input_fit_parameters.b_freq_border
     upper_freq_border = input_fit_parameters.up_freq_border
     bandwidth = input_fit_parameters.bandwidth
-    fit = Fit(data.final_ps,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag)
+    if (rmbg_flag == 'rmbg'):
+        fit_data = data.rmbg_final_ps
+    else:
+        fit_data = data.final_ps
+    fit = Fit(fit_data,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag)
 
     #fit
     fit.fit_i_xy_dm()

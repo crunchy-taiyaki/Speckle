@@ -166,6 +166,7 @@ class Data():
         self.flat = None
         self.ref_ps = ObjSpectrum()
         self.final_ps = ObjSpectrum()
+        self.rmbg_final_ps = ObjSpectrum()
 
     def save_to(self,result_folder_path):
         path = result_folder_path
@@ -174,7 +175,7 @@ class Data():
         np.save(path + '\\mean_star_ps.npy',self.star_ps.values)
         np.save(path + '\\mean_ref_ps.npy',self.ref_ps.values)
         np.save(path + '\\final_ps.npy',self.final_ps.values)
-        np.save(path + '\\final_rmbg_ps.npy',self.final_ps.clean_ps)
+        np.save(path + '\\final_rmbg_ps.npy',self.rmbg_final_ps.values)
         np.save(path + '\\freq_bound.npy',np.array([self.star_ps.b_bound,self.star_ps.up_bound,\
                                                     self.ref_ps.b_bound,self.ref_ps.up_bound,\
                                                     self.final_ps.b_bound,self.final_ps.up_bound\
@@ -194,7 +195,7 @@ class Data():
         self.star_ps.values = np.load(path + '\\mean_star_ps.npy')
         self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
         self.final_ps.values = np.load(path + '\\final_ps.npy')
-        self.final_ps.clean_ps = np.load(path + '\\final_rmbg_ps.npy')
+        self.rmbg_final_ps.values = np.load(path + '\\final_rmbg_ps.npy')
         freq_bounds = np.load(path + '\\freq_bound.npy')
         self.star_ps.b_bound = freq_bounds[0]
         self.star_ps.up_bound = freq_bounds[1]
@@ -202,6 +203,8 @@ class Data():
         self.ref_ps.up_bound = freq_bounds[3]
         self.final_ps.b_bound = freq_bounds[4]
         self.final_ps.up_bound = freq_bounds[5]
+        self.rmbg_final_ps.b_bound = self.final_ps.b_bound
+        self.rmbg_final_ps.up_bound = self.final_ps.up_bound
 
     def define_freq_bounds(self):
         self.star_ps.define_bounds()
@@ -213,8 +216,10 @@ class Data():
 
     def find_final_ps(self):
         self.final_ps.values = self.star_ps.values/self.ref_ps.values
-        # with background removing
-        self.final_ps.clean_ps = self.star_ps.clean_ps/self.ref_ps.clean_ps
+        self.rmbg_final_ps.values = self.star_ps.clean_ps/self.ref_ps.clean_ps
+
         self.final_ps.b_bound = np.max([self.star_ps.b_bound,self.ref_ps.b_bound])
         self.final_ps.up_bound = np.min([self.star_ps.up_bound,self.ref_ps.up_bound])
+        self.rmbg_final_ps.b_bound = self.final_ps.b_bound
+        self.rmbg_final_ps.up_bound = self.final_ps.up_bound
 

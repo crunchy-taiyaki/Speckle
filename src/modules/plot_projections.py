@@ -81,14 +81,14 @@ def plot_projections(filename_config):
     plt.savefig(files.images + '\\final_ps_y.png')
 
     plt.figure()
-    plt.plot(data.final_ps.clean_ps[256,:])
+    plt.plot(freq_axis, data.rmbg_final_ps.values[256,:])
     plt.title('rmbg final ps x')
     ymin,ymax = define_ylim(data.final_ps)
     plt.ylim(ymin,ymax)
     plt.savefig(files.images + '\\final_rmbg_ps_x.png')
 
     plt.figure()
-    plt.plot(data.final_ps.clean_ps[:,256])
+    plt.plot(freq_axis, data.rmbg_final_ps.values[:,256])
     plt.title('rmbg final ps y')
     ymin,ymax = define_ylim(data.final_ps)
     plt.ylim(ymin,ymax)
