@@ -23,7 +23,7 @@ def plot_acf(filename_config):
     plt.imshow(acf, cmap='gray', vmin=np.min(acf), vmax=np.max(acf)/100)
     plt.title('acf')
     plt.savefig(files.images + '\\acf final_ps.png')
-    plt.show()
+    plt.show(block=False)
 
 def guess_xy(filename_config):
     plot_acf(filename_config)
