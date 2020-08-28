@@ -4,7 +4,7 @@ from info import input_files_info
 from obj_spectra_preproc import objects_spectra_preproc
 from final_ps import final_ps
 from fit_params import fit_i_xy_dm
-from find_xy import plot_acf
+from find_xy import guess_xy
 from plot_fit import plot_fitted_i_xy_dm
 from plot_projections import plot_projections
 from stats import clean_stats, normality_test, dm_xy_result
