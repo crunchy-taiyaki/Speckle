@@ -3,21 +3,21 @@ binary
 #dm21
 1.0
 #dm21_bottom_border
-0.0
+0.9
 #dm21_upper_border
-1.7
+1.5
 #x2
-237.0
+19.0
 #x2_bottom_border
-236.0
+18.0
 #x2_upper_border
-238.0
+20.0
 #y2
-252.0
+4.0
 #y2_bottom_border
-251.0
+3.0
 #y2_upper_border
-252.6
+5.0
 #dm31
 -
 #dm31_bottom_border
@@ -37,10 +37,10 @@ binary
 #y3_upper_border
 -
 #bottom freq border
-256
+0
 #upper freq border
-512
+256
 #bandwidth
-5
+10
 #amplitude freq borders
 #dm21 freq border (375)
