@@ -18,6 +18,12 @@ def slice_image(image,x1,y1,x2,y2):
             projection[x] = image[x,y]
     return projection
 
+def plot_rings_borders(x_center,y_center,r1,r2):
+    bottom_ring=plt.Circle((x_center,y_center), r1, color='orange', fill=False)
+    upper_ring=plt.Circle((x_center,y_center), r2, color='orange', fill=False)
+    plt.gcf().gca().add_artist(bottom_ring)
+    plt.gcf().gca().add_artist(upper_ring)
+
 
 
 
