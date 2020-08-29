@@ -33,7 +33,7 @@ def gauss_2d(u,v,sigma_x,sigma_y,theta):
     a = np.cos(theta)**2/(2*sigma_x**2) + np.sin(theta)**2/(2*sigma_y**2)
     b = -np.sin(2*theta)/(4*sigma_x**2) + np.sin(2*theta)/(4*sigma_y**2)
     c = np.sin(theta)**2/(2*sigma_x**2) + np.cos(theta)**2/(2*sigma_y**2)
-    return np.exp(- a*u**2 + 2*b*u*v + c*v**2)
+    return np.exp(- a*u**2 - 2*b*u*v - c*v**2)
 
 def ellipse_parameters(ps,bottom_freq,upper_freq):
     def gauss_residual_function(init_guess):
