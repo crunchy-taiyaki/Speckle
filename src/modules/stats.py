@@ -162,7 +162,7 @@ def clean_stats(filename_config,fit_parameters_config):
         plt.title('mask y3_hist')
         plt.savefig(files.images + '\\y3_hist_mask.png')
 
-    plt.show(filename_config,fit_parameters_config)
+    plt.show()
 
 def plot_residuals(filename_config,fit_parameters_config,rmbg_flag):
     #read config file
