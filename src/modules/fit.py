@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from grid import Grid
-from masks import ring_mask
+from masks import GaussEllipse, ring_mask, elliptic_mask
 
 def define_ylim(image):
     masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
@@ -132,7 +132,7 @@ class FitResult():
 
 
 class Fit:
-    def __init__(self,ps,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth=10,flag='triple'):
+    def __init__(self,ps,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag,zone_flag=None,ellipse_params=None):
         self.bandwidth = bandwidth
         self.bottom_freq_border = bottom_freq_border
         self.upper_freq_border = upper_freq_border
@@ -141,12 +141,21 @@ class Fit:
         self.model = model
         self.uv_grid = uv_grid
         self.flag = flag
+        self.zone_flag = zone_flag
+        if (self.zone_flag == 'ellipse'):
+            self.ellipse_params = ellipse_params #GaussEllipse()
         self.result = FitResult(self.flag)
 
     def ring_zones(self,zones):
         f_ar_lenght = len(self.result.f_ar)
         for i in range(f_ar_lenght):
             zones[i] = ring_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
+
+    def elliptic_zones(self,zones):
+        f_ar_lenght = len(self.result.f_ar)
+        for i in range(f_ar_lenght):
+            zones[i] = elliptic_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth,self.ellipse_params)
+
  
     def plot_zone(self,zone):
         plt.figure()
@@ -206,7 +215,10 @@ class Fit:
         
         size = 512
         zones = np.ma.array(np.zeros((f_ar_lenght,size,size)))
-        self.ring_zones(zones)
+        if (self.zone_flag == 'ellipse'):
+            self.elliptic_zones(zones)
+        else:
+            self.ring_zones(zones)
 
         #fitting
         print('start fitting dm and xy')

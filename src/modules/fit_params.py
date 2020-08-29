@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 from initial_parameters import DataFiles
 from power_spectrum import Data
 from models import Models
-from fit import FitParameters, Fit, BinaryInitialParameters, TripleInitialParameters, Grid
+from fit import FitParameters, Fit, BinaryInitialParameters, TripleInitialParameters
+from grid import Grid
+from masks import ellipse_parameters
 
-def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag):
+def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag, zone_flag):
 
     #read config file
     files = DataFiles()
@@ -37,7 +39,12 @@ def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag):
         fit_data = data.rmbg_final_ps
     else:
         fit_data = data.final_ps
-    fit = Fit(fit_data,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag)
+
+    if (zone_flag == 'ellipse'):
+        ellipse_params = ellipse_parameters(data.star_ps.values,bottom_freq_border,upper_freq_border)
+        fit = Fit(fit_data,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag,zone_flag,ellipse_params)
+    else:
+        fit = Fit(fit_data,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag,zone_flag)
 
     #fit
     fit.fit_i_xy_dm()
