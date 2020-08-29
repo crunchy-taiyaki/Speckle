@@ -50,8 +50,11 @@ def elliptic_mask(img,r1,r2,ellipse_params):
     x, y = np.meshgrid(np.arange(W), np.arange(H))
     x -= 256; y-= 256
     x_new, y_new = rotate(x,y,ellipse_params.theta)
-    mask = np.logical_and(x_new**2/a_bottom**2 + y_new**2/b_bottom**2 > 1, x_new**2/a_upper**2 + y_new**2/b_upper**2 < 1)
-    masked_img = np.ma.array(img,mask=np.logical_not(mask))
+    if (a_bottom==0 or b_bottom==0):
+        mask = x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1
+    else:
+        mask = np.logical_or(x_new**2/a_bottom**2 + y_new**2/b_bottom**2 < 1, x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1)
+    masked_img = np.ma.array(img,mask=mask)
     return masked_img
 
 def rotate(x,y,angle):
