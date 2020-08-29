@@ -20,6 +20,36 @@ def define_ylim(image):
     ymax = np.max(masked_image)
     return ymin,ymax
 
+class GaussEllipse:
+    def __init__(self,sigma_x=None,sigma_y=None,theta=None):
+        self.sigma_x = sigma_x #[sigma_x] = 1 px
+        self.sigma_y = sigma_y #[sigma_y] = 1 px 
+        self.theta = theta #[theta] = 1 radian
+
+    def array(self):
+        return np.array([self.sigma_x,self.sigma_y,self.theta])
+
+def gauss_2d(u,v,sigma_x,sigma_y,theta):
+    a = np.cos(theta)**2/(2*sigma_x**2) + np.sin(theta)**2/(2*sigma_y**2)
+    b = -np.sin(2*theta)/(4*sigma_x**2) + np.sin(2*theta)/(4*sigma_y**2)
+    c = np.sin(theta)**2/(2*sigma_x**2) + np.cos(theta)**2/(2*sigma_y**2)
+    return np.exp(- a*u**2 + 2*b*u*v + c*v**2)
+
+def ellipse_parameters(ps,bottom_freq,upper_freq):
+    def gauss_residual_function(init_guess):
+        return np.sum((gauss_2d(u,v,*init_guess) - ps)**2)
+
+    u,v = Grid(size=512).uv_meshgrid()
+    init_guess = GaussEllipse()
+    init_guess.sigma_x = (upper_freq-bottom_freq)/2
+    init_guess.sigma_y = init_guess.sigma_x
+    init_guess.theta = 0.
+    gauss_residual_function(init_guess.array())
+    fit_result = init_guess.array()
+    #fit_result = minimize(gauss_residual_function, init_guess.array(), method='L-BFGS-B', tol=1e-8).x
+    return GaussEllipse(*fit_result)
+
+
 class BinaryInitialParameters:
 
     def __init__(self,dm21,x2,y2):
