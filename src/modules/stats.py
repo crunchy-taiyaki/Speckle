@@ -194,6 +194,116 @@ def plot_residuals(filename_config,fit_parameters_config,rmbg_flag):
     plt.savefig(files.images + '\\residuals.png')
     plt.show()
 
+def define_sample(filename_config,fit_parameters_config,residual_level):
+    #read config file
+    files = DataFiles()
+    files.read_input(filename_config)
+    files.info()
+
+    #read data from files
+    data = Data()
+    data.read_from(files.data)
+
+    #read i xy dm from files
+    input_fit_parameters = FitParameters()
+    input_fit_parameters.read_input(fit_parameters_config)
+    fit_result = FitResult(input_fit_parameters.flag)
+    fit_result.read_i_xy_dm_freq_from(files.data)
+
+    #mask results outside frequence borders
+    mask_down_up = np.logical_and(fit_result.f_ar > data.final_ps.b_bound, fit_result.f_ar < data.final_ps.up_bound)
+    mask_up = fit_result.f_ar < data.final_ps.up_bound
+    residuals_mask = fit_result.residuals < residual_level
+
+    #combine masks
+    mask = residuals_mask
+
+    #masking results
+    mask_dm21 = fit_result.dm21_ar[mask]
+    mask_x2 = fit_result.x2_ar[mask]
+    mask_y2 = fit_result.y2_ar[mask]
+    if (input_fit_parameters.flag == 'triple'):
+        mask_dm31 = fit_result.dm31_ar[mask]
+        mask_x3 = fit_result.x3_ar[mask]
+        mask_y3 = fit_result.y3_ar[mask]
+
+    #save clean samples
+    sample = ResultSample(input_fit_parameters.flag)
+    sample.dm21 = mask_dm21
+    sample.x2 = mask_x2
+    sample.y2 = mask_y2
+    if (input_fit_parameters.flag == 'triple'):
+        sample.dm31 = mask_dm31
+        sample.x3 = mask_x3
+        sample.y3 = mask_y3
+    sample.save_to(files.data)
+
+    #plot histograms
+    bins = 50
+    plt.figure()
+    plt.hist(fit_result.dm21_ar, bins)
+    plt.title('dm21_hist')
+    plt.savefig(files.images + '\\dm21_hist.png')
+
+    plt.figure()
+    plt.hist(sample.dm21, bins)
+    plt.title('mask dm21_hist')
+    plt.savefig(files.images + '\\dm21_hist_mask.png')
+
+    plt.figure()
+    plt.hist(fit_result.x2_ar, bins)
+    plt.title('x2_hist')
+    plt.savefig(files.images + '\\x2_hist.png')
+
+    plt.figure()
+    plt.hist(sample.x2, bins)
+    plt.title('mask x2_hist')
+    plt.savefig(files.images + '\\x2_hist_mask.png')
+
+    plt.figure()
+    plt.hist(fit_result.y2_ar, bins)
+    plt.title('y2_hist')
+    plt.savefig(files.images + '\\y2_hist.png')
+
+    plt.figure()
+    plt.hist(sample.y2, bins)
+    plt.title('mask y2_hist')
+    plt.savefig(files.images + '\\y2_hist_mask.png')
+    plt.show()
+
+    if (input_fit_parameters.flag == 'triple'):
+        plt.figure()
+        plt.hist(fit_result.dm31_ar, bins)
+        plt.title('dm31_hist')
+        plt.savefig(files.images + '\\dm31_hist.png')
+
+        plt.figure()
+        plt.hist(sample.dm31, bins)
+        plt.title('mask dm31_hist')
+        plt.savefig(files.images + '\\dm31_hist_mask.png')
+
+        plt.figure()
+        plt.hist(fit_result.x3_ar, bins)
+        plt.title('x3_hist')
+        plt.savefig(files.images + '\\x3_hist.png')
+
+        plt.figure()
+        plt.hist(sample.x3, bins)
+        plt.title('mask x3_hist')
+        plt.savefig(files.images + '\\x3_hist_mask.png')
+
+        plt.figure()
+        plt.hist(fit_result.y3_ar, bins)
+        plt.title('y3_hist')
+        plt.savefig(files.images + '\\y3_hist.png')
+
+        plt.figure()
+        plt.hist(sample.y3, bins)
+        plt.title('mask y3_hist')
+        plt.savefig(files.images + '\\y3_hist_mask.png')
+
+    plt.show()
+
 def normality_test(filename_config,fit_parameters_config):
 
     #read config file
