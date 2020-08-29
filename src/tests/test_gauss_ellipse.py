@@ -5,7 +5,7 @@ sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\s
 
 from initial_parameters import DataFiles
 from power_spectrum import Data
-from fit import FitParameters, Grid, gauss_2d, ellipse_parameters
+from grid import Grid
 from plot import define_ylim
 
 def gauss_ellipse(filename_config, fit_parameters_config, rmbg_flag):
@@ -37,7 +37,7 @@ def gauss_ellipse(filename_config, fit_parameters_config, rmbg_flag):
     params = ellipse_parameters(ps=fit_data.values,bottom_freq=bottom_freq_border,upper_freq=upper_freq_border)
 
     #calc gaussian
-    u,v = uv_meshgrid
+    u,v = Grid(size=512).uv_meshgrid()
     gauss = gauss_2d(u,v,*params.array())
 
     #plot

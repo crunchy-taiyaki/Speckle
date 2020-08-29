@@ -1,18 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+from grid import Grid
 from masks import ring_mask
-
-class Grid:
-
-    def __init__(self,size=512):
-        self.size = size
-
-    def uv_meshgrid(self):
-        U = np.arange(0,self.size)/self.size - 0.5
-        V = np.arange(0,self.size)/self.size - 0.5
-        u,v = np.meshgrid(U,V)
-        return u,v
 
 def define_ylim(image):
     masked_image = ring_mask(image.values, image.b_bound, image.up_bound)

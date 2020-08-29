@@ -1,4 +1,5 @@
 import numpy as np
+from grid import Grid
 
 def ring_mask(img, r1, r2):
     H, W = img.shape
