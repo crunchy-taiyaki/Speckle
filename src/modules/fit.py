@@ -3,6 +3,17 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from masks import ring_mask
 
+class Grid:
+
+    def __init__(self,size=512):
+        self.size = size
+
+    def uv_meshgrid(self):
+        U = np.arange(0,self.size)/self.size - 0.5
+        V = np.arange(0,self.size)/self.size - 0.5
+        u,v = np.meshgrid(U,V)
+        return u,v
+
 def define_ylim(image):
     masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
     ymin = np.min(masked_image)
@@ -34,18 +45,6 @@ class TripleInitialParameters:
 
     def array(self):
         return np.array([self.I1,self.dm21,self.dm31,self.x2,self.y2,self.x3,self.y3])
-
-
-class Grid:
-
-    def __init__(self,size=512):
-        self.size = size
-
-    def uv_meshgrid(self):
-        U = np.arange(0,self.size)/self.size - 0.5
-        V = np.arange(0,self.size)/self.size -0.5
-        u,v = np.meshgrid(U,V)
-        return u,v
 
 class FitParameters():
     def __init__(self):
