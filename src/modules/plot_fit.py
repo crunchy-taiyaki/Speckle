@@ -45,15 +45,15 @@ def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
     plt.title('amplitude')
     plt.savefig(files.images + '\\I.png')
 
-    #_____________________ps 45 slice_____________________
-    plt.figure()
-    plt.plot(freq_axis, slice_image(fitted_data.values,x1=0,y1=0,x2=54,y2=256))
-    plt.axvline(fitted_data.b_bound, color='orange')
-    plt.axvline(fitted_data.up_bound, color='orange')
-    ymin,ymax=define_ylim(fitted_data)
-    plt.ylim(ymin,ymax)
-    plt.title('ps slice')
-    plt.savefig(files.images + '\\ps_slice.png')
+    ##_____________________ps 45 slice_____________________
+    #plt.figure()
+    #plt.plot(freq_axis, slice_image(fitted_data.values,x1=0,y1=0,x2=54,y2=256))
+    #plt.axvline(fitted_data.b_bound, color='orange')
+    #plt.axvline(fitted_data.up_bound, color='orange')
+    #ymin,ymax=define_ylim(fitted_data)
+    #plt.ylim(ymin,ymax)
+    #plt.title('ps slice')
+    #plt.savefig(files.images + '\\ps_slice.png')
 
     #______________________dm21_____________________
     plt.figure()
@@ -103,22 +103,54 @@ def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
     plt.title('y2')
     plt.savefig(files.images + '\\y2 vs ps.png') 
 
+    if (input_fit_parameters.flag == 'triple'):
+        #______________________dm31_____________________
+        plt.figure()
+        plt.scatter(fit_result.f_ar,fit_result.dm31_ar)
+        plt.axvline(fitted_data.b_bound, color='orange')
+        plt.axvline(fitted_data.up_bound, color='orange')
+        plt.title('dm31')
+        plt.savefig(files.images + '\\dm31.png')
+
+        #______________________dm31 vs ps_____________________
+        plt.figure()
+        plt.scatter(fit_result.f_ar,fit_result.dm31_ar, color='orange')
+        plt.imshow(fitted_data.values,cmap='gray',vmin=ymin,vmax=ymax, extent=[-256,256,-256,256])
+        plot_rings_borders(0,0,fitted_data.b_bound,fitted_data.up_bound)
+        plt.title('dm31')
+        plt.savefig(files.images + '\\dm31 vs ps.png')
+
+        #____________________x3____________________________
+        plt.figure()
+        plt.scatter(fit_result.f_ar,fit_result.x3_ar)
+        plt.axvline(fitted_data.b_bound, color='orange')
+        plt.axvline(fitted_data.up_bound, color='orange')
+        plt.title('x3')
+        plt.savefig(files.images + '\\x3.png')
+
+        #____________________x3 vs ps____________________________
+        plt.figure()
+        plt.scatter(fit_result.f_ar,fit_result.x3_ar, color='orange')
+        plt.imshow(fitted_data.values,cmap='gray',vmin=ymin,vmax=ymax, extent=[-256,256,-256,256])
+        plot_rings_borders(0,0,fitted_data.b_bound,fitted_data.up_bound)
+        plt.title('x3')
+        plt.savefig(files.images + '\\x3 vs ps.png')
+
+        #_______________________y3___________________
+        plt.figure()
+        plt.scatter(fit_result.f_ar,fit_result.y3_ar)
+        plt.axvline(fitted_data.b_bound, color='orange')
+        plt.axvline(fitted_data.up_bound, color='orange')
+        plt.title('y3')
+        plt.savefig(files.images + '\\y3.png')
+
+        #_______________________y3 vs ps___________________
+        plt.figure()
+        plt.scatter(fit_result.f_ar,fit_result.y3_ar, color='orange')
+        plt.imshow(fitted_data.values,cmap='gray',vmin=ymin,vmax=ymax, extent=[-256,256,-256,256])
+        plot_rings_borders(0,0,fitted_data.b_bound,fitted_data.up_bound)
+        plt.title('y3')
+        plt.savefig(files.images + '\\y3 vs ps.png')
+
     plt.show()
 
-
-    ##_____________________dm21 vs x ps___________________
-    #plt.figure(figsize=(8,8))
-    #plt.subplot(2,1,1)
-    #plt.scatter(fit_result.f_ar,fit_result.dm21_ar)
-    #plt.axvline(fitted_data.b_bound, color='orange')
-    #plt.axvline(fitted_data.up_bound, color='orange')
-    #plt.title('dm21')
-    #plt.subplot(2,1,2)
-    #plt.plot(half_freq_axis,fitted_data.values[256,256:])
-    #plt.axvline(fitted_data.b_bound, color='orange')
-    #plt.axvline(fitted_data.up_bound, color='orange')
-    #ymin,ymax=define_ylim(fitted_data)
-    #plt.ylim(ymin,ymax)
-    #plt.xlim(0,256)
-    #plt.title('x final ps')
-    #plt.savefig(files.images + '\\dm21_vs_x_ps.png')

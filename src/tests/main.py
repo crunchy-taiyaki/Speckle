@@ -10,8 +10,11 @@ from plot_projections import plot_projections
 from stats import plot_residuals, define_sample, normality_test, dm_xy_result
 from plot_images import plot_dark_flat_and_spectra_image
 
-filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_input.txt'
-fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_fit_parameters.txt'
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_fit_parameters.txt'
+
+filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_as_triple_input.txt'
+fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_as_triple_fit_parameters.txt'
 
 #input_files_info(filename_config)
 #objects_spectra_preproc(filename_config)
@@ -21,7 +24,7 @@ fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speck
 #guess_xy(filename_config)
 #fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg','ellipse')
 #plot_fitted_i_xy_dm(filename_config,fit_parameters_config,'rmbg')
-plot_residuals(filename_config,fit_parameters_config,'rmbg')
-define_sample(filename_config,fit_parameters_config, residual_level=0.004)
-normality_test(filename_config,fit_parameters_config)
+#plot_residuals(filename_config,fit_parameters_config,'rmbg')
+#define_sample(filename_config,fit_parameters_config, residual_level=0.004)
+#normality_test(filename_config,fit_parameters_config)
 dm_xy_result(filename_config,fit_parameters_config)

@@ -269,7 +269,6 @@ def define_sample(filename_config,fit_parameters_config,residual_level):
     plt.hist(sample.y2, bins)
     plt.title('mask y2_hist')
     plt.savefig(files.images + '\\y2_hist_mask.png')
-    plt.show()
 
     if (input_fit_parameters.flag == 'triple'):
         plt.figure()
@@ -363,3 +362,4 @@ def dm_xy_result(filename_config,fit_parameters_config):
         result.y3 = np.median(sample.y3)
         result.y3_er = np.std(sample.y3)
     result.print_values()
+    result.save_to(files.data + '\\dm_xy.txt')

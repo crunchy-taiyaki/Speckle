@@ -1,5 +1,5 @@
  #flag
-binary
+triple
 #dm21
 1.0
 #dm21_bottom_border
@@ -19,23 +19,23 @@ binary
 #y2_upper_border
 5.0
 #dm31
--
+100.
 #dm31_bottom_border
--
+99.0
 #dm31_upper_border
--
+150.0
 #x3
--
+0.0
 #x3_bottom_border
--
+-1.0
 #x3_upper_border
--
+1.0
 #y3
--
+0.0
 #y3_bottom_border
--
+-1.0
 #y3_upper_border
--
+1.0
 #bottom freq border
 0
 #upper freq border

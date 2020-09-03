@@ -24,3 +24,13 @@ class FinalFitParameters():
             print('dm31=',self.dm31,'+-',self.dm31_er,'[m]')
             print('x3=',self.x3,'+-',self.x3_er, '[px]')
             print('y3=',self.y3,'+-',self.y3_er, '[px]')
+
+    def save_to(self,filename):
+        with open(filename,'w') as output:
+            output.write('dm21='+ str(self.dm21) + '+-' + str(self.dm21_er) + '\n')
+            output.write('x2=' + str(self.x2) + '+-' + str(self.x2_er) + '\n')
+            output.write('y2=' + str(self.y2) + '+-' + str(self.y2_er) + '\n')
+            if (self.flag == 'triple'):
+                output.write('dm31='+ str(self.dm31) + '+-' + str(self.dm31_er) + '\n')
+                output.write('x3=' + str(self.x3) + '+-' + str(self.x3_er) + '\n')
+                output.write('y3=' + str(self.y3) + '+-' + str(self.y3_er) + '\n')

@@ -25,17 +25,17 @@ class BinaryInitialParameters:
 
 class TripleInitialParameters:
 
-    def __init__(self,dm21,dm31,x2,y2,x3,y3):
+    def __init__(self,dm21,x2,y2,dm31,x3,y3):
         self.I1 = None
         self.dm21 = dm21
-        self.dm31 = dm31
         self.x2 = x2
         self.y2 = y2
+        self.dm31 = dm31
         self.x3 = x3
         self.y3 = y3
 
     def array(self):
-        return np.array([self.I1,self.dm21,self.dm31,self.x2,self.y2,self.x3,self.y3])
+        return np.array([self.I1,self.dm21,self.x2,self.y2,self.dm31,self.x3,self.y3])
 
 class FitParameters():
     def __init__(self):
@@ -166,25 +166,49 @@ class Fit:
     def plot_fit_izone(self,i,zone_values):
         u,v = self.uv_grid
         freq_axis = np.arange(-256.0,256.0)
-        plt.figure()
-        plt.plot(freq_axis, self.ps.values[256,:],label='all data')
-        plt.plot(freq_axis, zone_values[256,:],label='data')
-        plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[256,:], label='init guess')
-        plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[256,:],label='model')
-        ymin,ymax = define_ylim(self.ps)
-        plt.ylim(ymin,ymax)
-        plt.title('x projection')
-        plt.legend()
+        if(self.flag == 'triple'):
+            plt.figure()
+            plt.plot(freq_axis, self.ps.values[256,:],label='all data')
+            plt.plot(freq_axis, zone_values[256,:],label='data')
+            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[256,:], label='init guess')
+            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
+                                                                    self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])[256,:],label='model')
+            ymin,ymax = define_ylim(self.ps)
+            plt.ylim(ymin,ymax)
+            plt.title('x projection')
+            plt.legend()
 
-        plt.figure()
-        plt.plot(freq_axis, self.ps.values[:,256],label='all data')
-        plt.plot(freq_axis, zone_values[:,256],label='data')
-        plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[:,256], label='init guess')
-        plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[:,256],label='model')
-        ymin,ymax = define_ylim(self.ps)
-        plt.ylim(ymin,ymax)
-        plt.title('y projection')
-        plt.legend()
+            plt.figure()
+            plt.plot(freq_axis, self.ps.values[:,256],label='all data')
+            plt.plot(freq_axis, zone_values[:,256],label='data')
+            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[:,256], label='init guess')
+            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
+                                                                    self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])[:,256],label='model')
+            ymin,ymax = define_ylim(self.ps)
+            plt.ylim(ymin,ymax)
+            plt.title('y projection')
+            plt.legend()
+
+        else:
+            plt.figure()
+            plt.plot(freq_axis, self.ps.values[256,:],label='all data')
+            plt.plot(freq_axis, zone_values[256,:],label='data')
+            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[256,:], label='init guess')
+            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[256,:],label='model')
+            ymin,ymax = define_ylim(self.ps)
+            plt.ylim(ymin,ymax)
+            plt.title('x projection')
+            plt.legend()
+
+            plt.figure()
+            plt.plot(freq_axis, self.ps.values[:,256],label='all data')
+            plt.plot(freq_axis, zone_values[:,256],label='data')
+            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[:,256], label='init guess')
+            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[:,256],label='model')
+            ymin,ymax = define_ylim(self.ps)
+            plt.ylim(ymin,ymax)
+            plt.title('y projection')
+            plt.legend()
         plt.show()
 
     def fit_i_xy_dm(self):
@@ -232,9 +256,9 @@ class Fit:
             if(self.flag=='triple'):
                 self.result.I1_ar[i] = fit_result.x[0]
                 self.result.dm21_ar[i] = fit_result.x[1]
-                self.result.dm31_ar[i] = fit_result.x[2]
-                self.result.x2_ar[i] = fit_result.x[3]
-                self.result.y2_ar[i] = fit_result.x[4]
+                self.result.x2_ar[i] = fit_result.x[2]
+                self.result.y2_ar[i] = fit_result.x[3]
+                self.result.dm31_ar[i] = fit_result.x[4]
                 self.result.x3_ar[i] = fit_result.x[5]
                 self.result.y3_ar[i] = fit_result.x[6]
                 self.result.residuals[i] = np.sum((self.model(u,v,\
