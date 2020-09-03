@@ -13,6 +13,14 @@ def ring_mask(img, r1, r2):
     img_masked_ring = np.ma.array(img_masked_ring, mask = mask1)
     return img_masked_ring
 
+def ring_logical_mask(frame_size, r1, r2):
+    x, y = np.meshgrid(np.arange(frame_size), np.arange(frame_size))
+    d2 = (x - 256)**2 + (y - 256)**2
+    mask1 = d2 < (r1)**2
+    mask2 = d2 > (r2)**2
+    mask = np.logical_or(mask1,mask2)
+    return mask
+
 class GaussEllipse:
     def __init__(self,sigma_x=None,sigma_y=None,theta=None):
         self.sigma_x = sigma_x #[sigma_x] = 1 px
@@ -56,6 +64,20 @@ def elliptic_mask(img,r1,r2,ellipse_params):
         mask = np.logical_or(x_new**2/a_bottom**2 + y_new**2/b_bottom**2 < 1, x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1)
     masked_img = np.ma.array(img,mask=mask)
     return masked_img
+
+def elliptic_logical_mask(frame_size,r1,r2,ellipse_params):
+    a_bottom = r1
+    b_bottom = r1*ellipse_params.sigma_y/ellipse_params.sigma_x
+    a_upper = r2
+    b_upper = r2*ellipse_params.sigma_y/ellipse_params.sigma_x
+    x, y = np.meshgrid(np.arange(frame_size), np.arange(frame_size))
+    x -= 256; y-= 256
+    x_new, y_new = rotate(x,y,ellipse_params.theta)
+    if (a_bottom==0 or b_bottom==0):
+        mask = x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1
+    else:
+        mask = np.logical_or(x_new**2/a_bottom**2 + y_new**2/b_bottom**2 < 1, x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1)
+    return mask
 
 def rotate(x,y,angle):
     x_new = x*np.cos(angle) - y*np.sin(angle)

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from grid import Grid
-from masks import GaussEllipse, ring_mask, elliptic_mask
+from masks import GaussEllipse, ring_mask,ring_logical_mask,elliptic_mask,elliptic_logical_mask
 
 def define_ylim(image):
     masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
@@ -220,7 +220,12 @@ class Fit:
         #  and at the same time, the self can not be set as a function argument,
         #  because the residual function should has only one argument,
         #   the vector initial_guess.
-            return np.sum((self.model(u,v,*init_guess) - zone_values)**2)
+            if (self.zone_flag == 'ellipse'):
+                mask = elliptic_logical_mask(512,self.bottom_freq_border,self.upper_freq_border,self.ellipse_params)
+            else:
+                mask = ring_logical_mask(512,self.bottom_freq_border,self.upper_freq_border)
+            masked_model = np.ma.array(self.model(u,v,*init_guess),mask=mask)
+            return np.sum((masked_model - zone_values)**2)
 
         #init data
         u,v = self.uv_grid
