@@ -25,13 +25,13 @@ def plot_dark_flat_and_spectra_image(filename_config):
 
     plt.figure()
     vmin,vmax = define_ylim(data.ref_ps)
-    plt.imshow(data.ref_ps.values, cmap='gray',vmin=vmin,vmax=vmax/10)
+    plt.imshow(data.ref_ps.values, cmap='gray',vmin=vmin,vmax=vmax)
     plt.title('ref')
     plt.savefig(files.images + '\\ref_ps.png')
 
     plt.figure()
     vmin,vmax = define_ylim(data.star_ps)
-    plt.imshow(data.star_ps.values, cmap='gray',vmin=vmin,vmax=vmax/10)
+    plt.imshow(data.star_ps.values, cmap='gray',vmin=vmin,vmax=vmax)
     plt.title('star')
     plt.savefig(files.images + '\\star_ps.png')
 

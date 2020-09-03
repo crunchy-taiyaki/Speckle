@@ -20,7 +20,7 @@ def plot_acf(filename_config):
     files.read_input(filename_config)
     acf = calc_acf(filename_config)
     plt.figure()
-    plt.imshow(acf, cmap='gray', vmin=np.min(acf), vmax=np.max(acf)/100)
+    plt.imshow(acf, cmap='gray', vmin=np.min(acf), vmax=np.max(acf)/100, extent=[256.0,-256.0,-256.0,256.0])
     plt.title('acf')
     plt.savefig(files.images + '\\acf final_ps.png')
     plt.show(block=False)
@@ -30,5 +30,5 @@ def guess_xy(filename_config):
     x = float(input('enter x:'))
     y = float(input('enter y:'))
     print('please write to config..')
-    print('x2 =', y-256, 'y2 = ', x-256)
+    print('x =', y, 'y = ', x)
 

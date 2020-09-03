@@ -1,0 +1,29 @@
+# hd52721
+#filter 550
+#04.03.2020
+# star
+D:\\Speckle_data\\hd52721\\040320\\550\\HD52721_550.dat
+# star frames number
+2000
+# dark
+-
+# dark frames number
+0
+# flat
+-
+# flat frames number
+0
+# reference star
+D:\\Speckle_data\\hd52721\\040320\\550\\HD51700_550.dat
+# reference frames number
+2000
+# reference dark
+-
+# reference dark frames number
+0
+# store all images to folder
+D:\\Speckle_data\\hd52721\\040320\\550\\speckle_result\\images
+# store all data, arrays to folder
+D:\\Speckle_data\\hd52721\\040320\\550\\speckle_result\\data
+# working directory
+-
