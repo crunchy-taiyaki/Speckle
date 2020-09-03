@@ -33,7 +33,7 @@ def middle_dark(darkname,darkframes):
 
 def median_dark(darkname,darkframes):
         print('-----------------MEDIAN DARK-----------------')
-        if (darkname == None):
+        if (darkname is None):
             print("'-' in input file")
             print('median dark calculation will be ignored')
             return None
@@ -46,7 +46,7 @@ def median_dark(darkname,darkframes):
  
 def middle_flat(flatname,flatframes):
     print('-----------------FLAT-----------------')
-    if (flatname == None):
+    if (flatname is None):
         print("'-' in input file")
         print('flat calculation will be ignored')
         return None
@@ -66,14 +66,14 @@ def middle_flat(flatname,flatframes):
 
 def obj_ps(starname,starframes, middle_dark, middle_flat):
     print('-----------------POWER SPECTRUM-----------------')
-    if (starname == None):
+    if (starname is None):
         print("'-' in input file")
         print('obj(ref) power spectrum calculation will be ignored')
         return None
     else:
-        if (middle_dark == None):
+        if (middle_dark is None):
             middle_dark = 0.
-        if (middle_flat == None):
+        if (middle_flat is None):
             middle_flat = 1.
         star=np.memmap(starname,mode='r', dtype='uint16', shape=(starframes,512,512))
         middle_star=np.zeros((512,512))

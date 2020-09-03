@@ -6,21 +6,21 @@ D:\\Speckle_data\\hd52721\\040320\\550\\HD52721_550.dat
 # star frames number
 2000
 # dark
--
+D:\\Speckle_data\\darks\\080419\\dark1.dat
 # dark frames number
-0
+2000
 # flat
--
+D:\\Speckle_data\\flats\\040320\\flat550_mag16.dat
 # flat frames number
-0
+2000
 # reference star
 D:\\Speckle_data\\hd52721\\040320\\550\\HD51700_550.dat
 # reference frames number
 2000
 # reference dark
--
+D:\\Speckle_data\\darks\\080419\\dark1.dat
 # reference dark frames number
-0
+2000
 # store all images to folder
 D:\\Speckle_data\\hd52721\\040320\\550\\speckle_result\\images
 # store all data, arrays to folder
