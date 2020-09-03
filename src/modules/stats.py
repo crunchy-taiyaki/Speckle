@@ -187,6 +187,7 @@ def plot_residuals(filename_config,fit_parameters_config,rmbg_flag):
     else:
         fitted_data = data.final_ps
 
+    print('residuals:',fit_result.residuals)
     plt.figure()
     plt.scatter(fit_result.f_ar, fit_result.residuals)
     plt.axvline(fitted_data.b_bound, color='orange')
@@ -216,7 +217,7 @@ def define_sample(filename_config,fit_parameters_config,residual_level):
     residuals_mask = fit_result.residuals < residual_level
 
     #combine masks
-    mask = residuals_mask
+    mask = np.logical_and(residuals_mask,mask_down_up)
 
     #masking results
     mask_dm21 = fit_result.dm21_ar[mask]
