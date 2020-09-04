@@ -4,7 +4,6 @@ from scipy.stats import shapiro
 from initial_parameters import DataFiles
 from power_spectrum import Data
 from fit import FitParameters, FitResult
-from final_params import FinalFitParameters
 
 class ResultSample():
 
@@ -333,34 +332,3 @@ def normality_test(filename_config,fit_parameters_config):
         shapiro_wilk_test(sample.x3)
         print('y3')
         shapiro_wilk_test(sample.y3)
-
-def dm_xy_result(filename_config,fit_parameters_config):
-    #read config file
-    files = DataFiles()
-    files.read_input(filename_config)
-
-    #read fit parameters config
-    input_fit_parameters = FitParameters()
-    input_fit_parameters.read_input(fit_parameters_config)
-        
-    #read samples
-    sample = ResultSample(input_fit_parameters.flag)
-    sample.read_from(files.data)
-
-    #calc final values and errors
-    result = FinalFitParameters(input_fit_parameters.flag)
-    result.dm21 = np.median(sample.dm21)
-    result.dm21_er = np.std(sample.dm21)
-    result.x2 = np.median(sample.x2)
-    result.x2_er = np.std(sample.x2)
-    result.y2 = np.median(sample.y2)
-    result.y2_er = np.std(sample.y2)
-    if (input_fit_parameters.flag == 'triple'):
-        result.dm31 = np.median(sample.dm31)
-        result.dm31_er = np.std(sample.dm31)
-        result.x3 = np.median(sample.x3)
-        result.x3_er = np.std(sample.x3)
-        result.y3 = np.median(sample.y3)
-        result.y3_er = np.std(sample.y3)
-    result.print_values()
-    result.save_to(files.data + '\\dm_xy.txt')

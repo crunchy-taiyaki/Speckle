@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.optimize import minimize
+from matrix_operations import rotate
 from grid import Grid
 
 def ring_mask(img, r1, r2):
@@ -79,8 +80,4 @@ def elliptic_logical_mask(frame_size,r1,r2,ellipse_params):
         mask = np.logical_or(x_new**2/a_bottom**2 + y_new**2/b_bottom**2 < 1, x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1)
     return mask
 
-def rotate(x,y,angle):
-    x_new = x*np.cos(angle) - y*np.sin(angle)
-    y_new = x*np.sin(angle) + y*np.cos(angle)
-    return x_new,y_new
 
