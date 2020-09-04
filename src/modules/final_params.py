@@ -45,12 +45,12 @@ class Coordinate():
 
     def calc_polar(self):
         self.r = np.sqrt(self.alpha**2 + self.delta**2)
-        self.theta = np.pi/2 - np.arctan2(self.delta,self.alpha)
+        self.theta = (np.arctan2(self.delta,self.alpha))*180/np.pi
         #errors
         self.r_er = np.sqrt(self.alpha**2*self.alpha_er**2 + self.delta**2*self.delta_er**2)/self.r
         #theta error calculation
         part1 = 1./(1+(self.delta/self.alpha)**2)**2
-        self.theta_er = part1*np.sqrt(self.delta_er**2/self.alpha**2 + self.delta**2*self.alpha_er**2/self.alpha**2)
+        self.theta_er = (part1*np.sqrt(self.delta_er**2/self.alpha**2 + self.delta**2*self.alpha_er**2/self.alpha**2))*180/np.pi
 
     def read_input(self,file):
         info = []
@@ -176,6 +176,8 @@ def final_result(filename_config,fit_parameters_config,angle_config):
         result.y3 = np.median(sample.y3)
         result.y3_er = np.std(sample.y3)
     result.print_values()
+    print('psi2:',np.arctan2(result.y2,result.x2)*180/np.pi)
+    print('psi3:',np.arctan2(result.y3,result.x3)*180/np.pi)
     result.save_to(dm_xy_filename)
     
     #convert coordinates in other system
