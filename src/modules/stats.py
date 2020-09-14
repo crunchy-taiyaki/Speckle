@@ -211,12 +211,12 @@ def define_sample(filename_config,fit_parameters_config,residual_level):
     fit_result.read_i_xy_dm_freq_from(files.data)
 
     #mask results outside frequence borders
-    mask_down_up = np.logical_and(fit_result.f_ar > data.final_ps.b_bound, fit_result.f_ar < data.final_ps.up_bound)
-    mask_up = fit_result.f_ar < data.final_ps.up_bound
+    #mask_down_up = np.logical_and(fit_result.f_ar > data.final_ps.b_bound, fit_result.f_ar < data.final_ps.up_bound)
+    mask_freq = np.logical_and(fit_result.f_ar > input_fit_parameters.mask_b_freq_border, fit_result.f_ar < input_fit_parameters.mask_up_freq_border)
     residuals_mask = fit_result.residuals < residual_level
 
     #combine masks
-    mask = np.logical_and(residuals_mask,mask_down_up)
+    mask = np.logical_and(residuals_mask,mask_freq)
 
     #masking results
     mask_dm21 = fit_result.dm21_ar[mask]
