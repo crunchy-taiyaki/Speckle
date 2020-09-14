@@ -96,6 +96,8 @@ class FitParameters():
         self.b_freq_border = int(info[19])
         self.up_freq_border = int(info[20])
         self.bandwidth = int(info[21])
+        self.mask_b_freq_border = int(info[22])
+        self.mask_up_freq_border = int(info[23])
 
 
 class FitResult():
@@ -268,13 +270,14 @@ class Fit:
                 self.result.y3_ar[i] = fit_result.x[6]
                 self.result.residuals[i] = np.sum((self.model(u,v,\
                                                    self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
-                                                   self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])-zone_values)**2)
+                                                   self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])-zone_values)**2)/np.sum(zone_values**2)
             else:
                 self.result.I1_ar[i] = fit_result.x[0]
                 self.result.dm21_ar[i] = fit_result.x[1]
                 self.result.x2_ar[i] = fit_result.x[2]
                 self.result.y2_ar[i] = fit_result.x[3]
-                self.result.residuals[i] = np.sum((self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])- zone_values)**2)
+                self.result.residuals[i] = np.sum((self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])
+                                                   - zone_values)**2)/np.sum(zone_values**2)
 
             #self.plot_fit_izone(i,zone_values)
 
@@ -302,14 +305,6 @@ class Fit:
             self.result.dm31_ar = np.load(path + '\\dm31_ar.npy')
             self.result.x3_ar = np.load(path + '\\x3_ar.npy')
             self.result.y3_ar = np.load(path + '\\y3_ar.npy')
-
-    def xy_to_r_psi(self):
-        #x1 = 0; y1 = 0
-        if(self.flag=='triple'):
-            self.result.r13_ar = np.sqrt((self.result.x3_ar)**2 + (self.result.y3_ar)**2)
-            self.result.psi3_ar = np.arctan2(self.result.y3_ar,self.result.x3_ar)*180.0/np.pi
-        self.result.r12_ar = np.sqrt((self.result.x2_ar)**2 + (self.result.y2_ar)**2)
-        self.result.psi2_ar = np.arctan2(self.result.y2_ar,self.result.x2_ar)*180.0/np.pi
 
  
 
