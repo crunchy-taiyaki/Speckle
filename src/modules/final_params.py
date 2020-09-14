@@ -4,7 +4,7 @@ from fit import FitParameters, FitResult
 from stats import ResultSample
 
 class Coordinate():
-    def __init__(self,x=None,y=None,x_er=None,y_er=None,\
+    def __init__(self,x=None,y=None,x_er=None,y_er=None,phase_flag=None,\
                      paralactic_angle=None,paralactic_angle_er=None,\
                      scale=None,scale_er=None):
         self.x = x # [x] = 1px
@@ -13,10 +13,13 @@ class Coordinate():
         self.delta_in_px = None # [beta] = 1 px
         self.alpha = None # [alpha] = 1 arcsec
         self.delta = None # [beta] = 1 arcsec
+        self.r_in_px = None
         self.r = None
+        self.psi = None
         self.theta = None
         self.paralactic_angle = paralactic_angle # [paralactic_angle] = 1 radian
         self.scale = scale # [scale] = 1 arcsec/px
+        self.phase_flag = phase_flag
         #errors
         self.x_er = x_er
         self.y_er = y_er
@@ -24,33 +27,42 @@ class Coordinate():
         self.delta_in_px_er = None
         self.alpha_er = None
         self.delta_er = None
+        self.r_in_px_er = None
         self.r_er = None
+        self.psi_er = None
         self.theta_er = None
         self.paralactic_angle_er = paralactic_angle_er
         self.scale_er = scale_er
 
     def calc_equtorial(self):
-        self.alpha_in_px = self.x*np.cos(self.paralactic_angle) - self.y*np.sin(self.paralactic_angle)
-        self.delta_in_px = self.x*np.sin(self.paralactic_angle) + self.y*np.cos(self.paralactic_angle)
-        self.alpha_in_px_er = np.sqrt(self.x_er**2*np.cos(self.paralactic_angle)**2+self.y_er**2*np.sin(self.paralactic_angle)**2 +
-                                self.paralactic_angle_er**2*(self.x*np.sin(self.paralactic_angle)+self.y*np.cos(self.paralactic_angle))**2)
-        self.delta_in_px_er = np.sqrt(self.x_er**2*np.sin(self.paralactic_angle)**2+self.y_er**2*np.cos(self.paralactic_angle)**2 +
-                                self.paralactic_angle_er**2*(self.x*np.cos(self.paralactic_angle)-self.y*np.sin(self.paralactic_angle))**2)
+        #calc alpha and delta in px:
+        self.alpha_in_px = self.r_in_px*np.cos(self.theta)
+        self.delta_in_px = self.r_in_px*np.sin(self.theta)
+        self.alpha_in_px_er = np.sqrt(self.r_in_px_er**2*np.cos(self.theta)**2 + self.theta_er**2*self.r_in_px**2*np.sin(self.theta)**2)
+        self.delta_in_px_er = np.sqrt(self.r_in_px_er**2*np.sin(self.theta)**2 + self.theta_er**2*self.r_in_px**2*np.cos(self.theta)**2)
 
         #calc alpha and delta in arcsec:
         self.alpha = self.alpha_in_px*self.scale
-        self.alpha_er = np.sqrt(self.scale**2*self.alpha_in_px_er**2 + self.alpha**2*self.scale_er**2)
+        self.alpha_er = np.sqrt(self.scale**2*self.alpha_in_px_er**2 + self.alpha_in_px**2*self.scale_er**2)
         self.delta = self.delta_in_px*self.scale
-        self.delta_er = np.sqrt(self.scale**2*self.delta_in_px_er**2 + self.delta**2*self.scale_er**2)
+        self.delta_er = np.sqrt(self.scale**2*self.delta_in_px_er**2 + self.delta_in_px**2*self.scale_er**2)
 
     def calc_polar(self):
-        self.r = np.sqrt(self.alpha**2 + self.delta**2)
-        self.theta = (np.arctan2(self.delta,self.alpha))*180/np.pi
-        #errors
-        self.r_er = np.sqrt(self.alpha**2*self.alpha_er**2 + self.delta**2*self.delta_er**2)/self.r
+        self.r_in_px = np.sqrt(self.x**2 + self.y**2)
+        self.r = self.r_in_px*self.scale
+        self.psi = (np.arctan2(self.y,self.x)) #in radian
+        self.theta = self.psi + self.paralactic_angle  #in radian
+        if (self.phase_flag == '180'):
+            self.theta += np.pi
+        #errors:
+        #r error calculation
+        self.r_in_px_er = np.sqrt(self.x**2*self.x_er**2 + self.y**2*self.y_er**2)/self.r_in_px
+        self.r_er = np.sqrt(self.scale**2*self.r_in_px_er**2 + self.r_in_px**2*self.scale_er**2)
+        #psi error calculation
+        part1 = 1./(1+(self.y/self.x)**2)
+        self.psi_er = part1*np.sqrt(self.y_er**2/self.x**2 + self.y**2*self.x_er**2/self.x**4)
         #theta error calculation
-        part1 = 1./(1+(self.delta/self.alpha)**2)**2
-        self.theta_er = (part1*np.sqrt(self.delta_er**2/self.alpha**2 + self.delta**2*self.alpha_er**2/self.alpha**2))*180/np.pi
+        self.theta_er = np.sqrt(self.psi_er**2 + self.paralactic_angle_er**2)
 
     def read_input(self,file):
         info = []
@@ -102,11 +114,9 @@ class Coordinate():
         self.paralactic_angle_er = np.sqrt(df_fi**2*fi_er**2 + df_d**2*d_er**2 + df_t**2*t_er**2)
 
         #add nonhorizontality
-        self.paralactic_angle += nonhorizontality
+        self.paralactic_angle += nonhorizontality #in radian
         self.paralactic_angle_er = np.sqrt(self.paralactic_angle_er**2 + nonhorizontality_er**2)
-
-
-
+        
 class FinalFitParameters():
     def __init__(self,flag):
         self.flag = flag
@@ -145,7 +155,7 @@ class FinalFitParameters():
                 output.write('y3=' + str(self.y3) + '+-' + str(self.y3_er) + '\n')
 
 
-def final_result(filename_config,fit_parameters_config,angle_config):
+def final_result(filename_config,fit_parameters_config,angle_config,phase_flag):
     #read config file
     files = DataFiles()
     files.read_input(filename_config)
@@ -176,36 +186,42 @@ def final_result(filename_config,fit_parameters_config,angle_config):
         result.y3 = np.median(sample.y3)
         result.y3_er = np.std(sample.y3)
     result.print_values()
-    print('psi2:',np.arctan2(result.y2,result.x2)*180/np.pi)
-    print('psi3:',np.arctan2(result.y3,result.x3)*180/np.pi)
     result.save_to(dm_xy_filename)
     
     #convert coordinates in other system
-    coord2 = Coordinate(x=result.x2,y=result.y2,x_er=result.x2_er,y_er=result.y2_er)
+    coord2 = Coordinate(x=result.x2,y=result.y2,x_er=result.x2_er,y_er=result.y2_er,phase_flag=phase_flag)
     coord2.calc_paralactic_angle(angle_config)
-    coord2.calc_equtorial()
     coord2.calc_polar()
+    coord2.calc_equtorial()
     if (input_fit_parameters.flag == 'triple'):
-        coord3 = Coordinate(x=result.x3,y=result.y3,x_er=result.x3_er,y_er=result.y3_er)
+        coord3 = Coordinate(x=result.x3,y=result.y3,x_er=result.x3_er,y_er=result.y3_er,phase_flag=phase_flag)
         coord3.calc_paralactic_angle(angle_config)
-        coord3.calc_equtorial()
         coord3.calc_polar()
+        coord3.calc_equtorial()
+
 
     #save to file
     with open(coord_filename,'w') as output:
-        output.write('alpha2:'+ str(coord2.alpha_in_px) + '+-' + str(coord2.alpha_in_px_er) + '[px]' + '\n')
-        output.write('delta2:'+ str(coord2.delta_in_px) + '+-' + str(coord2.delta_in_px_er) + '[px]' + '\n')
+        output.write('r2_in_px:'+ str(coord2.r_in_px) + '+-' + str(coord2.r_in_px_er) + '[px]' + '\n')
+        output.write('r2:'+ str(coord2.r) + '+-' + str(coord2.r_er) + '[arcsec]' + '\n')
+        output.write('psi2:'+ str(coord2.psi*180/np.pi) + '+-' + str(coord2.psi_er*180/np.pi) + '[deg]' + '\n')
+        output.write('theta2:'+ str(coord2.theta*180/np.pi) + '+-' + str(coord2.theta_er*180/np.pi) + '[deg]' + '\n')
+        output.write('alpha2_in_px:'+ str(coord2.alpha_in_px) + '+-' + str(coord2.alpha_in_px_er) + '[px]' + '\n')
+        output.write('delta2_in_px:'+ str(coord2.delta_in_px) + '+-' + str(coord2.delta_in_px_er) + '[px]' + '\n')
         output.write('alpha2:'+ str(coord2.alpha) + '+-' + str(coord2.alpha_er) + '[arcsec]' + '\n')
         output.write('delta2:'+ str(coord2.delta) + '+-' + str(coord2.delta_er) + '[arcsec]' + '\n')
-        output.write('r2:'+ str(coord2.r) + '+-' + str(coord2.r_er) + '[arcsec]' + '\n')
-        output.write('theta2:'+ str(coord2.theta) + ' or ' + str(coord2.theta+180.) + '+-' + str(coord2.theta_er) + '[arcsec]' + '\n')
+
+
         output.write('\n')
         if (input_fit_parameters.flag == 'triple'):
-            output.write('alpha3:'+ str(coord3.alpha_in_px) + '+-' + str(coord3.alpha_in_px_er) + '[px]' + '\n')
-            output.write('delta3:'+ str(coord3.delta_in_px) + '+-' + str(coord3.delta_in_px_er) + '[px]' + '\n')
+            output.write('r3_in_px:'+ str(coord3.r_in_px) + '+-' + str(coord3.r_in_px_er) + '[px]' + '\n')
+            output.write('r3:'+ str(coord3.r) + '+-' + str(coord3.r_er) + '[arcsec]' + '\n')
+            output.write('psi3:'+ str(coord3.psi*180/np.pi) + '+-' + str(coord3.psi_er*180/np.pi) + '[deg]' + '\n')
+            output.write('theta3:'+ str(coord3.theta*180/np.pi) + '+-' + str(coord3.theta_er*180/np.pi) + '[deg]' + '\n')
+            output.write('alpha3_in_px:'+ str(coord3.alpha_in_px) + '+-' + str(coord3.alpha_in_px_er) + '[px]' + '\n')
+            output.write('delta3_in_px:'+ str(coord3.delta_in_px) + '+-' + str(coord3.delta_in_px_er) + '[px]' + '\n')
             output.write('alpha3:'+ str(coord3.alpha) + '+-' + str(coord3.alpha_er) + '[arcsec]' + '\n')
             output.write('delta3:'+ str(coord3.delta) + '+-' + str(coord3.delta_er) + '[arcsec]' + '\n')
-            output.write('r3:'+ str(coord3.r) + '+-' + str(coord3.r_er) + '[arcsec]' + '\n')
-            output.write('theta3:'+ str(coord3.theta) + ' or ' + str(coord3.theta+180.) + '+-' + str(coord3.theta_er) + '[arcsec]' + '\n')
+
     
 
