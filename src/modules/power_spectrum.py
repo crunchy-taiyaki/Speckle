@@ -69,7 +69,7 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
     if (starname is None):
         print("'-' in input file")
         print('obj(ref) power spectrum calculation will be ignored')
-        return None
+        return np.nan
     else:
         if (middle_dark is None):
             middle_dark = 0.
@@ -207,19 +207,39 @@ class Data():
         self.rmbg_final_ps.up_bound = self.final_ps.up_bound
 
     def define_freq_bounds(self):
-        self.star_ps.define_bounds()
-        self.ref_ps.define_bounds()
+        if (np.all(np.isnan(self.ref_ps.values))):
+            print('defining borders without reference star..')
+            self.star_ps.define_bounds()
+            self.ref_ps.b_bound = 0.
+            self.ref_ps.up_bound = 256.
+        else:
+            self.star_ps.define_bounds()
+            self.ref_ps.define_bounds()
 
     def rmbg(self):
-        self.star_ps.rmbg()
-        self.ref_ps.rmbg()
+        if (np.all(np.isnan(self.ref_ps.values))):
+            print('removing background without reference star..')
+            self.star_ps.rmbg()
+            self.ref_ps.clean = np.ones_like(self.star_ps.values)
+        else:
+            self.star_ps.rmbg()
+            self.ref_ps.rmbg()
 
     def find_final_ps(self):
-        self.final_ps.values = self.star_ps.values/self.ref_ps.values
-        self.rmbg_final_ps.values = self.star_ps.clean_ps/self.ref_ps.clean_ps
+        if (np.all(np.isnan(self.ref_ps.values))):
+            print('calculations final power spectrum without reference star..')
+            self.ref_ps.values = np.ones_like(self.star_ps.values)
+            self.final_ps.values = self.star_ps.values
+            self.rmbg_final_ps.values = self.star_ps.clean_ps
 
-        self.final_ps.b_bound = np.max([self.star_ps.b_bound,self.ref_ps.b_bound])
-        self.final_ps.up_bound = np.min([self.star_ps.up_bound,self.ref_ps.up_bound])
-        self.rmbg_final_ps.b_bound = self.final_ps.b_bound
-        self.rmbg_final_ps.up_bound = self.final_ps.up_bound
+            self.final_ps.b_bound = self.star_ps.b_bound
+            self.final_ps.up_bound = self.star_ps.up_bound
+        else:
+            self.final_ps.values = self.star_ps.values/self.ref_ps.values
+            self.rmbg_final_ps.values = self.star_ps.clean_ps/self.ref_ps.clean_ps
+
+            self.final_ps.b_bound = np.max([self.star_ps.b_bound,self.ref_ps.b_bound])
+            self.final_ps.up_bound = np.min([self.star_ps.up_bound,self.ref_ps.up_bound])
+            self.rmbg_final_ps.b_bound = self.final_ps.b_bound
+            self.rmbg_final_ps.up_bound = self.final_ps.up_bound
 
