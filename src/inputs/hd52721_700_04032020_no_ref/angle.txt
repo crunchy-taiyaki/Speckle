@@ -1,0 +1,42 @@
+# BTA latitude in degr
+43.6467
+# camera nonhorizontality in degr
+1.50
+# nonhorizontality error
+0.01
+# scale factor (arcsec/px)
+0.00885267819
+# scale factor error
+5.16421857E-05
+#alpha hours start
+7.0
+#alpha hours end
+7.0
+#alpha minuts start
+2.0
+#alpha minuts end
+2.0
+#alpha sec start
+45.07
+#alpha sec end
+45.08
+#delta deg start
+-11.0
+#delta deg end
+-11.0
+#delta minuts start
+20.0
+#delta minuts end
+20.0
+#delta sec start
+4.7
+#delta sec end
+5.0
+#sideric time hours start
+7.0
+#sideric time hours end
+7.0
+#sideric time minuts start
+37.4
+#sideric time minuts end
+40.3

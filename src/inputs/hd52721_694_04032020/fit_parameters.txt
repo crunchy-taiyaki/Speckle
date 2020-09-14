@@ -1,0 +1,48 @@
+#flag
+triple
+#dm21
+2.15
+#dm21_bottom_border
+0.15
+#dm21_upper_border
+4.15
+#x2
+73.0
+#x2_bottom_border
+71.0
+#x2_upper_border
+75.0
+#y2
+10.0
+#y2_bottom_border
+8.0
+#y2_upper_border
+12.0
+#dm31
+2.05
+#dm31_bottom_border
+0.05
+#dm31_upper_border
+4.05
+#x3
+69.5
+#x3_bottom_border
+67.5
+#x3_upper_border
+71.5
+#y3
+7.5
+#y3_bottom_border
+5.5
+#y3_upper_border
+9.5
+#bottom freq border
+20
+#upper freq border
+160
+#bandwidth
+5
+#mask bottom freq border 20-160
+50
+#mask upper freq border
+160

@@ -1,0 +1,29 @@
+# hd52721
+#filter 694
+#04.03.2020
+# star
+D:\Speckle_data\hd52721\040320\694\HD52721_694.dat
+# star frames number
+2000
+# dark
+D:\Speckle_data\darks\080419\dark1.dat
+# dark frames number
+2000
+# flat
+D:\Speckle_data\flats\040320\flat694_mag16.dat
+# flat frames number
+2000
+# reference star
+-
+# reference frames number
+0
+# reference dark
+-
+# reference dark frames number
+0
+# store all images to folder
+D:\Speckle_data\hd52721\040320\694\speckle_result_no_ref\images
+# store all data, arrays to folder
+D:\Speckle_data\hd52721\040320\694\speckle_result_no_ref\data
+# working directory
+-
