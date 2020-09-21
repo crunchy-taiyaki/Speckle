@@ -20,10 +20,10 @@ from final_params import final_result
 #filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_as_triple_input.txt'
 #fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_as_triple_fit_parameters.txt'
 
-## triple hd52721 550 04_03_2020
-#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\input.txt'
-#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\fit_parameters.txt'
-#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\angle.txt'
+# triple hd52721 550 04_03_2020
+filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\input.txt'
+fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\fit_parameters.txt'
+angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\angle.txt'
 
 ## triple hd52721 550 04_03_2020 no ref
 #filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020_no_ref\\input.txt'
@@ -36,14 +36,19 @@ from final_params import final_result
 #angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020\\angle.txt'
 
 ## triple hd52721 694 04_03_2020 no ref
-filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020_no_ref\\input.txt'
-fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020_no_ref\\fit_parameters.txt'
-angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020_no_ref\\angle.txt'
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020_no_ref\\input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020_no_ref\\fit_parameters.txt'
+#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_694_04032020_no_ref\\angle.txt'
+
+## triple hd52721 700 04_03_2020
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020\\input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020\\fit_parameters.txt'
+#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020\\angle.txt'
 
 ## triple hd52721 700 04_03_2020 no ref
-filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020_no_ref\\input.txt'
-fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020_no_ref\\fit_parameters.txt'
-angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020_no_ref\\angle.txt'
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020_no_ref\\input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020_no_ref\\fit_parameters.txt'
+#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_700_04032020_no_ref\\angle.txt'
 
 ## triple hd52721 800 04_03_2020
 #filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_800_04032020\\input.txt'
@@ -80,6 +85,12 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_08042019_no_ref\\fit_parameters.txt'
 #angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_08042019_no_ref\\angle.txt'
 
+## triple hd52721 800 08 04 2019 no ref
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_800_08042019_no_ref\\input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_800_08042019_no_ref\\fit_parameters.txt'
+#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_800_08042019_no_ref\\angle.txt'
+
+
 #input_files_info(filename_config)
 #objects_spectra_preproc(filename_config)
 #final_ps(filename_config)
@@ -89,6 +100,6 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg','') #flags: 'rmbg' or '' and 'ellipse or '' 
 #plot_fitted_i_xy_dm(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
 #plot_residuals(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
-#define_sample(filename_config,fit_parameters_config, residual_level=1.)
+#define_sample(filename_config,fit_parameters_config, residual_level=0.05)
 #normality_test(filename_config,fit_parameters_config)
 final_result(filename_config,fit_parameters_config,angle_config,'180')

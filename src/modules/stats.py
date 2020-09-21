@@ -9,6 +9,8 @@ class ResultSample():
 
     def __init__(self,flag):
         self.flag = flag
+        self.f = None
+        self.I1 = None
         self.dm21 = None
         self.x2 = None
         self.y2 = None
@@ -18,6 +20,8 @@ class ResultSample():
 
     def save_to(self,result_folder_path):
         path = result_folder_path
+        np.save(path + '\\f_sample.npy',self.f)
+        np.save(path + '\\I1_sample.npy',self.I1)
         np.save(path + '\\dm21_sample.npy',self.dm21)
         np.save(path + '\\x2_sample.npy',self.x2)
         np.save(path + '\\y2_sample.npy',self.y2)
@@ -28,6 +32,8 @@ class ResultSample():
 
     def read_from(self,result_folder_path):
         path = result_folder_path
+        self.f = np.load(path + '\\f_sample.npy')
+        self.I1 = np.load(path + '\\I1_sample.npy')
         self.dm21 = np.load(path + '\\dm21_sample.npy')
         self.x2 = np.load(path + '\\x2_sample.npy')
         self.y2 = np.load(path + '\\y2_sample.npy')
@@ -219,6 +225,8 @@ def define_sample(filename_config,fit_parameters_config,residual_level):
     mask = np.logical_and(residuals_mask,mask_freq)
 
     #masking results
+    mask_f = fit_result.f_ar[mask]
+    mask_I1 = fit_result.I1_ar[mask]
     mask_dm21 = fit_result.dm21_ar[mask]
     mask_x2 = fit_result.x2_ar[mask]
     mask_y2 = fit_result.y2_ar[mask]
@@ -229,6 +237,8 @@ def define_sample(filename_config,fit_parameters_config,residual_level):
 
     #save clean samples
     sample = ResultSample(input_fit_parameters.flag)
+    sample.f = mask_f
+    sample.I1 = mask_I1
     sample.dm21 = mask_dm21
     sample.x2 = mask_x2
     sample.y2 = mask_y2

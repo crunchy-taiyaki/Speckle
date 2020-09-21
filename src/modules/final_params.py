@@ -223,5 +223,7 @@ def final_result(filename_config,fit_parameters_config,angle_config,phase_flag):
             output.write('alpha3:'+ str(coord3.alpha) + '+-' + str(coord3.alpha_er) + '[arcsec]' + '\n')
             output.write('delta3:'+ str(coord3.delta) + '+-' + str(coord3.delta_er) + '[arcsec]' + '\n')
 
+    return result
+
     
 

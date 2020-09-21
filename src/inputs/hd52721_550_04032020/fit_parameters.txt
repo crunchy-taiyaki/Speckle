@@ -44,5 +44,5 @@ triple
 5
 #mask bottom freq border 20-160
 40
-#mask upper freq border
-140
+#mask upper freq border 40- 100
+100

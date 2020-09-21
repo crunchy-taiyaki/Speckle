@@ -43,6 +43,6 @@ triple
 #bandwidth
 5
 #mask bottom freq border 20-160
-50
+40
 #mask upper freq border
-160
+95
