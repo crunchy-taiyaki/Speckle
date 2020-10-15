@@ -148,69 +148,43 @@ class Fit:
             self.ellipse_params = ellipse_params #GaussEllipse()
         self.result = FitResult(self.flag)
 
-    def ring_zones(self,zones):
+    def ring_zones(self,mask):
         f_ar_lenght = len(self.result.f_ar)
         for i in range(f_ar_lenght):
-            zones[i] = ring_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
+            #zones[i] = ring_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
+            mask[i] = ring_logical_mask(512,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
 
-    def elliptic_zones(self,zones):
+    def elliptic_zones(self,mask):
         f_ar_lenght = len(self.result.f_ar)
         for i in range(f_ar_lenght):
-            zones[i] = elliptic_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth,self.ellipse_params)
+            #zones[i] = elliptic_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth,self.ellipse_params)
+            mask[i] = elliptic_logical_mask(512,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
 
  
-    def plot_zone(self,zone):
-        plt.figure()
-        plt.plot(zone[256,:])
-        plt.title('x_zone projection')
-        plt.show()
-
-    def plot_fit_izone(self,i,zone_values):
+    def plot_fit_izone(self,i,mask,fit_result):
         u,v = self.uv_grid
         freq_axis = np.arange(-256.0,256.0)
-        if(self.flag == 'triple'):
-            plt.figure()
-            plt.plot(freq_axis, self.ps.values[256,:],label='all data')
-            plt.plot(freq_axis, zone_values[256,:],label='data')
-            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[256,:], label='init guess')
-            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
-                                                                    self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])[256,:],label='model')
-            ymin,ymax = define_ylim(self.ps)
-            plt.ylim(ymin,ymax)
-            plt.title('x projection')
-            plt.legend()
+        zone_values = np.ma.array(self.ps.values,mask=mask[i])
+        init_guess_values = np.ma.array(self.model(u,v,*self.init_guess.array()),mask=mask[i])
+        model_values = np.ma.array(self.model(u,v,*fit_result.x),mask=mask[i])
+        ymin=0.; ymax=1.
+        plt.figure()
+        plt.plot(freq_axis, self.ps.values[256,:],label='all data')
+        plt.plot(freq_axis, zone_values[256,:],label='data')
+        plt.plot(freq_axis, init_guess_values[256,:], label='init guess')
+        plt.plot(freq_axis, model_values[256,:],label='model')
+        plt.ylim(ymin,ymax)
+        plt.title('x projection')
+        plt.legend()
 
-            plt.figure()
-            plt.plot(freq_axis, self.ps.values[:,256],label='all data')
-            plt.plot(freq_axis, zone_values[:,256],label='data')
-            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[:,256], label='init guess')
-            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
-                                                                    self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])[:,256],label='model')
-            ymin,ymax = define_ylim(self.ps)
-            plt.ylim(ymin,ymax)
-            plt.title('y projection')
-            plt.legend()
-
-        else:
-            plt.figure()
-            plt.plot(freq_axis, self.ps.values[256,:],label='all data')
-            plt.plot(freq_axis, zone_values[256,:],label='data')
-            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[256,:], label='init guess')
-            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[256,:],label='model')
-            ymin,ymax = define_ylim(self.ps)
-            plt.ylim(ymin,ymax)
-            plt.title('x projection')
-            plt.legend()
-
-            plt.figure()
-            plt.plot(freq_axis, self.ps.values[:,256],label='all data')
-            plt.plot(freq_axis, zone_values[:,256],label='data')
-            plt.plot(freq_axis, self.model(u,v,*self.init_guess.array())[:,256], label='init guess')
-            plt.plot(freq_axis, self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])[:,256],label='model')
-            ymin,ymax = define_ylim(self.ps)
-            plt.ylim(ymin,ymax)
-            plt.title('y projection')
-            plt.legend()
+        plt.figure()
+        plt.plot(freq_axis, self.ps.values[:,256],label='all data')
+        plt.plot(freq_axis, zone_values[:,256],label='data')
+        plt.plot(freq_axis, init_guess_values[:,256], label='init guess')
+        plt.plot(freq_axis, model_values[:,256],label='model')
+        plt.ylim(ymin,ymax)
+        plt.title('y projection')
+        plt.legend()
         plt.show()
 
     def fit_i_xy_dm(self):
@@ -222,11 +196,7 @@ class Fit:
         #  and at the same time, the self can not be set as a function argument,
         #  because the residual function should has only one argument,
         #   the vector initial_guess.
-            if (self.zone_flag == 'ellipse'):
-                mask = elliptic_logical_mask(512,self.bottom_freq_border,self.upper_freq_border,self.ellipse_params)
-            else:
-                mask = ring_logical_mask(512,self.bottom_freq_border,self.upper_freq_border)
-            masked_model = np.ma.array(self.model(u,v,*init_guess),mask=mask)
+            masked_model = np.ma.array(self.model(u,v,*init_guess),mask=mask[i])
             return np.sum((masked_model - zone_values)**2)
 
         #init data
@@ -245,18 +215,19 @@ class Fit:
             self.result.y3_ar = np.zeros(f_ar_lenght)
         
         size = 512
-        zones = np.ma.array(np.zeros((f_ar_lenght,size,size)))
+#        zones = np.ma.array(np.zeros((f_ar_lenght,size,size)))
+        mask = np.ma.array(np.zeros((f_ar_lenght,size,size)))
         if (self.zone_flag == 'ellipse'):
-            self.elliptic_zones(zones)
+            self.elliptic_zones(mask)
         else:
-            self.ring_zones(zones)
+            self.ring_zones(mask)
 
         #fitting
         print('start fitting dm and xy')
-        print('iteration: .. from ',len(zones))
-        for i in range(len(zones)):
+        print('iteration: .. from ',len(mask))
+        for i in range(len(mask)):
             print(i)
-            zone_values = zones[i]
+            zone_values = np.ma.array(self.ps.values,mask=mask[i])
             scale = np.sqrt(np.nanmean(zone_values))
             self.init_guess.I1 = scale
             fit_result = minimize(residual_function, self.init_guess.array(), method='L-BFGS-B', tol=1e-8)
@@ -268,18 +239,18 @@ class Fit:
                 self.result.dm31_ar[i] = fit_result.x[4]
                 self.result.x3_ar[i] = fit_result.x[5]
                 self.result.y3_ar[i] = fit_result.x[6]
-                self.result.residuals[i] = np.sum((self.model(u,v,\
+                self.result.residuals[i] = np.sqrt(np.sum((self.model(u,v,\
                                                    self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i],\
-                                                   self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])-zone_values)**2)/np.sum(zone_values**2)
+                                                   self.result.dm31_ar[i],self.result.x3_ar[i],self.result.y3_ar[i])-zone_values)**2)/np.sum(zone_values**2))
             else:
                 self.result.I1_ar[i] = fit_result.x[0]
                 self.result.dm21_ar[i] = fit_result.x[1]
                 self.result.x2_ar[i] = fit_result.x[2]
                 self.result.y2_ar[i] = fit_result.x[3]
-                self.result.residuals[i] = np.sum((self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])
-                                                   - zone_values)**2)/np.sum(zone_values**2)
+                self.result.residuals[i] = np.sqrt(np.sum((self.model(u,v,self.result.I1_ar[i],self.result.dm21_ar[i],self.result.x2_ar[i],self.result.y2_ar[i])
+                                                   - zone_values)**2)/np.sum(zone_values**2))
 
-            #self.plot_fit_izone(i,zone_values)
+            #self.plot_fit_izone(i,mask,fit_result)
 
     def save_i_xy_dm_freq(self,result_folder_path):
         path = result_folder_path

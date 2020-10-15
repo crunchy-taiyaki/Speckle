@@ -106,15 +106,21 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
         imagedark=None
         return dark_ps
 
+#def remove_background(image,freq_border):
+#    if (freq_border==512*np.sqrt(2)):
+#        return image
+#    else:
+#        frame_edge = 512*np.sqrt(2)
+#        background = ring_mask(image,freq_border,frame_edge)
+#        slice_out = np.mean(background)
+#        clean_image = image - slice_out
+#        return clean_image
+
 def remove_background(image,freq_border):
-    if (freq_border==512*np.sqrt(2)):
-        return image
-    else:
-        frame_edge = 512*np.sqrt(2)
-        background = ring_mask(image,freq_border,frame_edge)
-        slice_out = np.mean(background)
-        clean_image = image - slice_out
-        return clean_image
+    outbound = image[freq_border+256:512,0:512]
+    slice_out = np.mean(outbound, axis=0)
+    clean_image = image - slice_out
+    return clean_image
 
 
 
@@ -173,7 +179,9 @@ class Data():
         np.save(path + '\\mean_dark.npy',self.dark)
         np.save(path + '\\mean_flat.npy',self.flat)
         np.save(path + '\\mean_star_ps.npy',self.star_ps.values)
+        np.save(path + '\\mean_star_clean_ps.npy',self.star_ps.clean_ps)
         np.save(path + '\\mean_ref_ps.npy',self.ref_ps.values)
+        np.save(path + '\\mean_ref_clean_ps.npy',self.ref_ps.clean_ps)
         np.save(path + '\\final_ps.npy',self.final_ps.values)
         np.save(path + '\\final_rmbg_ps.npy',self.rmbg_final_ps.values)
         np.save(path + '\\freq_bound.npy',np.array([self.star_ps.b_bound,self.star_ps.up_bound,\
@@ -193,7 +201,9 @@ class Data():
         self.dark = np.load(path + '\\mean_dark.npy')
         self.flat = np.load(path + '\\mean_flat.npy')
         self.star_ps.values = np.load(path + '\\mean_star_ps.npy')
+        self.star_ps.clean_ps = np.load(path + '\\mean_star_clean_ps.npy')
         self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
+        self.ref_ps.clean_ps = np.load(path + '\\mean_ref_clean_ps.npy')
         self.final_ps.values = np.load(path + '\\final_ps.npy')
         self.rmbg_final_ps.values = np.load(path + '\\final_rmbg_ps.npy')
         freq_bounds = np.load(path + '\\freq_bound.npy')
@@ -220,7 +230,7 @@ class Data():
         if (np.all(np.isnan(self.ref_ps.values))):
             print('removing background without reference star..')
             self.star_ps.rmbg()
-            self.ref_ps.clean = np.ones_like(self.star_ps.values)
+            self.ref_ps.clean_ps = np.ones_like(self.star_ps.values)
         else:
             self.star_ps.rmbg()
             self.ref_ps.rmbg()

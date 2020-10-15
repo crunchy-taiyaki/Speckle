@@ -17,8 +17,8 @@ from final_params import final_result
 #fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_251_fit_parameters.txt'
 
 ## test triple system
-#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_as_triple_input.txt'
-#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\pair_100_as_triple_fit_parameters.txt'
+#filename_config = 'c:\\users\\marta\\source\\repos\\crunchy-taiyaki\\speckle\\src\\inputs\\pair_100_as_triple_input.txt'
+#fit_parameters_config = 'c:\\users\\marta\\source\\repos\\crunchy-taiyaki\\speckle\\src\\inputs\\pair_100_as_triple_fit_parameters.txt'
 
 # triple hd52721 550 04_03_2020
 filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\input.txt'
@@ -97,9 +97,9 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #plot_dark_flat_and_spectra_image(filename_config)
 #plot_projections(filename_config)
 #guess_xy(filename_config)
-#fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg','') #flags: 'rmbg' or '' and 'ellipse or '' 
+fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg','') #flags: 'rmbg' or '' and 'ellipse or '' 
 #plot_fitted_i_xy_dm(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
 #plot_residuals(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
 #define_sample(filename_config,fit_parameters_config, residual_level=0.05)
 #normality_test(filename_config,fit_parameters_config)
-final_result(filename_config,fit_parameters_config,angle_config,'180')
+#final_result(filename_config,fit_parameters_config,angle_config,'180')

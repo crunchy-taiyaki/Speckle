@@ -7,12 +7,23 @@ from fit import FitParameters, BinaryInitialParameters, TripleInitialParameters,
 from grid import Grid
 from stats import ResultSample
 from final_params import final_result
-from masks import ring_mask
+from masks import ring_logical_mask, ring_mask
+from plot import plot_rings_borders
+
+## triple hd52721 550 04_03_2020 no ref
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020_no_ref\\input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020_no_ref\\fit_parameters.txt'
+#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020_no_ref\\angle.txt'
 
 ## triple hd52721 550 04_03_2020
-filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\input.txt'
-fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\fit_parameters.txt'
-angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\angle.txt'
+#filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\input.txt'
+#fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\fit_parameters.txt'
+#angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020\\angle.txt'
+
+## TYC1947_00290_1 09 12 2019 700
+filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20190912\\input.txt'
+fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20190912\\fit_parameters.txt'
+angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20190912\\angle.txt'
 
 #read config file
 files = DataFiles()
@@ -36,66 +47,130 @@ sample.read_from(files.data)
 
 # fina parameters
 final_parameters = final_result(filename_config,fit_parameters_config,angle_config,'180')
-
-model = Models.triple
 size = 512
 u,v = Grid(size).uv_meshgrid()
 
 #create zones
 f_ar_lenght = len(fit_result.f_ar)
 sample_f_ar_lenght = len(sample.f)
-zones = np.ma.array(np.zeros((f_ar_lenght,size,size)))
-ps_zones = np.ma.array(np.zeros((f_ar_lenght,size,size)))
-residuals = np.ma.array(np.zeros((f_ar_lenght,size,size)))
-
-# model
-#plt.figure()
-#for i in range(f_ar_lenght):
-#    zones[i] = ring_mask(model(u,v,fit_result.I1_ar[i],\
-#                                fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i],\
-#                                fit_result.dm31_ar[i],fit_result.x3_ar[i],fit_result.y3_ar[i]),\
-#                                fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
-#    plt.imshow(zones[i], cmap='gray')
-#plt.savefig(files.images + '\\model_ps.png')
+zones = np.empty((f_ar_lenght,size,size))
+ps = data.rmbg_final_ps.values
+model_data = np.empty_like(ps)
+clean_model_data = np.empty_like(ps)
 
 
-#residuals
-for i in range(f_ar_lenght):
-    zones[i] = ring_mask(model(u,v,fit_result.I1_ar[i],\
-                                fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i],\
-                                fit_result.dm31_ar[i],fit_result.x3_ar[i],fit_result.y3_ar[i]),\
-                                fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
-    ps_zones[i] = ring_mask(data.rmbg_final_ps.values,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
-    residuals[i] = (ps_zones[i]-zones[i])**2
-residuals_frame = np.ma.concatenate([residuals[i] for i in range(f_ar_lenght)], axis=1)
-plt.imshow(residuals_frame, cmap='gray')
-plt.colorbar()
-plt.savefig(files.images + '\\residuals2d.png')
+freq_axis = np.arange(-256.0,256.0)
+
+if (input_fit_parameters.flag == 'triple'):
+    model = Models.triple
+    # model
+    plt.figure()
+    for i in range(f_ar_lenght):
+        mask = ring_logical_mask(size,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
+        model_data[mask] = model(u,v,fit_result.I1_ar[i],\
+                                    fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i],\
+                                    fit_result.dm31_ar[i],fit_result.x3_ar[i],fit_result.y3_ar[i])[mask]
+    plot_rings_borders(0,0,input_fit_parameters.mask_b_freq_border,input_fit_parameters.mask_up_freq_border)
+    plt.imshow(ring_mask(model_data,fit_result.f_ar[0],fit_result.f_ar[-11]), cmap='gray', extent=[-256.0,256.0,-256.0,256.0])
+    plt.title('model')
+    plt.colorbar()
+    plt.savefig(files.images + '\\model_ps.png')
+
+    #residuals
+    plt.figure()
+    for i in range(f_ar_lenght):
+        mask = ring_logical_mask(size,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
+        model_data[mask] = model(u,v,fit_result.I1_ar[i],\
+                                    fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i],\
+                                    fit_result.dm31_ar[i],fit_result.x3_ar[i],fit_result.y3_ar[i])[mask]
+        values = np.sqrt((model_data[mask]-ps[mask])**2/ps[mask]**2)
+        residuals[mask] = values
+    plot_rings_borders(0,0,input_fit_parameters.mask_b_freq_border,input_fit_parameters.mask_up_freq_border)
+    plt.imshow(ring_mask(residuals,fit_result.f_ar[0],fit_result.f_ar[-11]), cmap='gray', extent=[-256.0,256.0,-256.0,256.0],vmin=0,vmax=0.5)
+    plt.colorbar()
+    plt.savefig(files.images + '\\residuals2d.png')
+
+    plt.figure()
+    for i in range(sample_f_ar_lenght):
+        mask = ring_logical_mask(size,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)
+        clean_model_data[mask] = model(u,v,sample.I1[i],\
+                                    final_parameters.dm21,final_parameters.x2,final_parameters.y2,\
+                                    final_parameters.dm31,final_parameters.x3,final_parameters.y3)[mask]
+    plt.imshow(ring_mask(clean_model_data,sample.f[0],sample.f[-1]), cmap='gray', extent=[-256.0,256.0,-256.0,256.0])
+    plt.colorbar()
+    plt.savefig(files.images + '\\clean_model_ps.png')
 
 
-#clean_model
-#plt.figure()
-#for i in range(sample_f_ar_lenght):
-#    zones[i] = ring_mask(model(u,v,sample.I1[i],\
-#                                final_parameters.dm21,final_parameters.x2,final_parameters.y2,\
-#                                final_parameters.dm31,final_parameters.x3,final_parameters.y3),\
-#                                sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)
-#    plt.imshow(zones[i], cmap='gray')
-#plt.savefig(files.images + '\\clean_model_ps.png')
+    #clean residuals
+    plt.figure()
+    for i in range(sample_f_ar_lenght):
+        mask = ring_logical_mask(size,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)
+        clean_model_data[mask] = model(u,v,sample.I1[i],\
+                                    final_parameters.dm21,final_parameters.x2,final_parameters.y2,\
+                                    final_parameters.dm31,final_parameters.x3,final_parameters.y3)[mask]
+        values = np.sqrt((clean_model_data[mask]-ps[mask])**2/ps[mask]**2)
+        residuals[mask] = values
+    plt.imshow(ring_mask(residuals,sample.f[0],sample.f[-1]), cmap='gray',extent=[-256.0,256.0,-256.0,256.0],vmin=0,vmax=0.5)
+    plt.colorbar()
+    plt.savefig(files.images + '\\clean_residuals2d.png')
 
 
-##clean residuals
-#plt.figure()
-#for i in range(sample_f_ar_lenght):
-#    zones[i] = ring_mask(model(u,v,sample.I1[i],\
-#                                final_parameters.dm21,final_parameters.x2,final_parameters.y2,\
-#                                final_parameters.dm31,final_parameters.x3,final_parameters.y3),\
-#                                sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)
-#    ps_zones[i] = ring_mask(data.rmbg_final_ps.values,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)
-#    plt.imshow((ps_zones[i]-zones[i])**2/ps_zones[i]**2, cmap='gray')
-#plt.colorbar()
-#plt.savefig(files.images + '\\clean_residuals2d.png')
-plt.show()
+    plt.figure()
+    plt.plot(ring_mask(model(u,v,1.0, final_parameters.dm21,final_parameters.x2,final_parameters.y2,\
+                                    final_parameters.dm31,final_parameters.x3,final_parameters.y3),sample.f[0],sample.f[-1])[:,256],label='model')
+    plt.plot(ring_mask(ps,sample.f[0],sample.f[-1])[:,256],label='ps')
+    plt.legend()
+    plt.show()
+
+else:
+    masked_ps = ring_mask(ps,0,170)
+    model = Models.binary
+   
+    #plt.figure()
+    #for i in range(f_ar_lenght):
+    #    mask = ring_logical_mask(size,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
+    #    model_data[mask] = model(u,v,fit_result.I1_ar[i],\
+    #                                fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i])[mask]
+    #    plt.plot(freq_axis,ring_mask(model_data,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)[256,:],color='darkorange',label='model')
+    #plt.plot(freq_axis,ring_mask(ps,fit_result.f_ar[0],fit_result.f_ar[-1])[256,:],color='black',alpha=0.6,label='ps')
+    #plt.xlim(-input_fit_parameters.mask_up_freq_border,input_fit_parameters.mask_up_freq_border)
+    #plt.ylim(np.min(masked_ps[256,:]),np.max(masked_ps[256,:]))
+    #plt.title('model_ps x')
+    #plt.savefig(files.images + '\\model_ps_x.png')
+
+    #plt.figure()
+    #for i in range(f_ar_lenght):
+    #    mask = ring_logical_mask(size,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)
+    #    model_data[mask] = model(u,v,fit_result.I1_ar[i],\
+    #                                fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i])[mask]
+    #    plt.plot(freq_axis,ring_mask(model_data,fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)[:,256],color='darkorange',label='model')
+    #plt.plot(freq_axis,ring_mask(ps,fit_result.f_ar[0],fit_result.f_ar[-1])[:,256],color='black',alpha=0.6,label='ps')
+    #plt.xlim(-input_fit_parameters.mask_up_freq_border,input_fit_parameters.mask_up_freq_border)
+    #plt.ylim(np.min(masked_ps[:,256]),np.max(masked_ps[:,256]))
+    #plt.title('model_ps y')
+    #plt.savefig(files.images + '\\model_ps_y.png')
+
+    #plt.figure()
+    #for i in range(sample_f_ar_lenght):
+    #    mask = ring_logical_mask(size,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)
+    #    clean_model_data[mask] = model(u,v,np.mean(sample.I1),\
+    #                                final_parameters.dm21,final_parameters.x2,final_parameters.y2)[mask]
+    #    plt.plot(freq_axis,ring_mask(clean_model_data,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)[256,:],color='darkorange',label='model')
+    #plt.plot(freq_axis,ring_mask(ps,sample.f[0],sample.f[-1])[256,:],color='black',alpha=0.6,label='ps')
+    #plt.xlim(-input_fit_parameters.mask_up_freq_border,input_fit_parameters.mask_up_freq_border)
+    #plt.ylim(np.min(masked_ps[256,:]),np.max(masked_ps[256,:]))
+    #plt.title('clean model_ps x')
+    #plt.savefig(files.images + '\\clean_model_ps_x.png')
+
+    print(np.mean(sample.I1),final_parameters.dm21,final_parameters.x2,final_parameters.y2)
+
+    plt.figure()
+    plt.plot(freq_axis,ring_mask(ps,20,100)[:,256],color='black',alpha=0.6,label='ps')
+    plt.plot(freq_axis,ring_mask(model(u,v,np.mean(sample.I1),\
+                                    final_parameters.dm21,final_parameters.x2,final_parameters.y2),20,100)[:,256],color='black',alpha=0.6,label='model')
+    plt.title('clean model_ps y')
+    plt.savefig(files.images + '\\clean_model_ps_y.png')
+    plt.show()
 
 
 

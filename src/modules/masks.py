@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 from matrix_operations import rotate
 from grid import Grid

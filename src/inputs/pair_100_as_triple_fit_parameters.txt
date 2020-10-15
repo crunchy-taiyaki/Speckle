@@ -37,10 +37,12 @@ triple
 #y3_upper_border
 1.0
 #bottom freq border
-0
+20
 #upper freq border
-256
+150
 #bandwidth
-10
-#amplitude freq borders
-#dm21 freq border
+5
+#mask bottom freq border 20-160
+50
+#mask upper freq border
+200
