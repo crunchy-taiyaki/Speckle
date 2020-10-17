@@ -1,5 +1,6 @@
 from initial_parameters import DataFiles
 from power_spectrum import Data
+import matplotlib.pyplot as plt
 
 def final_ps(filename_config):
 
@@ -13,5 +14,6 @@ def final_ps(filename_config):
     data.define_freq_bounds()
     data.rmbg()
     data.find_final_ps()
+
     data.save_to(files.data)
     print('all data saved')

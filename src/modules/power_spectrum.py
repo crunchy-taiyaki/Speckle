@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 from masks import ring_mask
 
 
-def middle_fft(imagename,imageframes):
-    images = np.memmap(imagename,mode='r', dtype='uint16', shape=(imageframes,512,512))
-    middle_fft = np.zeros((512,512))
+def middle_fft(imagename,imageframes,size):
+    images = np.memmap(imagename,mode='r', dtype='uint16', shape=(imageframes,size,size))
+    middle_fft = np.zeros((size,size))
     for i in range(imageframes):
         middle_fft = middle_fft + np.fft.fft(images[i])
     middle_fft /= imageframes
@@ -13,15 +13,15 @@ def middle_fft(imagename,imageframes):
     return middle_fft
 
 
-def middle_dark(darkname,darkframes):
+def middle_dark(darkname,darkframes,size):
     print('-----------------DARK-----------------')
     if (darkname == None):
         print("'-' in input file")
         print('dark calculation will be ignored')
     else:
         print('-------Frames ignored in dark calculation--------')
-        dark=np.memmap(darkname,mode='r', dtype='uint16', shape=(darkframes,512,512))
-        middle_dark=np.zeros((512,512))
+        dark=np.memmap(darkname,mode='r', dtype='uint16', shape=(darkframes,size,size))
+        middle_dark=np.zeros((size,size))
         for i in range(darkframes):
             if np.amax(dark[i]) > 10000: # mask frames with particles
                 print(i) # print masked frames
@@ -31,20 +31,20 @@ def middle_dark(darkname,darkframes):
         dark=None
         return middle_dark
 
-def median_dark(darkname,darkframes):
+def median_dark(darkname,darkframes,size):
         print('-----------------MEDIAN DARK-----------------')
         if (darkname is None):
             print("'-' in input file")
             print('median dark calculation will be ignored')
             return None
         else:
-            dark=np.memmap(darkname, dtype='uint16', shape=(darkframes,512,512))
+            dark=np.memmap(darkname, dtype='uint16', shape=(darkframes,size,size))
             print('calculation...')
             median_dark = np.median(dark, axis=0)
             dark=None
             return median_dark
  
-def middle_flat(flatname,flatframes):
+def middle_flat(flatname,flatframes,size):
     print('-----------------FLAT-----------------')
     if (flatname is None):
         print("'-' in input file")
@@ -52,9 +52,9 @@ def middle_flat(flatname,flatframes):
         return None
     else:
         print('-------Frames ignored in flat calculation--------')
-        flat=np.memmap(flatname, mode='r', dtype='uint16', shape=(flatframes,512,512))
+        flat=np.memmap(flatname, mode='r', dtype='uint16', shape=(flatframes,size,size))
         maxintflat=np.zeros(flatframes)
-        middle_flat=np.zeros((512,512))
+        middle_flat=np.zeros((size,size))
         for i in range(flatframes):
             if np.amax(flat[i]) > 40000: # mask frames with particles
                 print(i) # print masked frames
@@ -64,7 +64,7 @@ def middle_flat(flatname,flatframes):
         flat=None
         return middle_flat
 
-def obj_ps(starname,starframes, middle_dark, middle_flat):
+def obj_ps(starname,starframes, middle_dark, middle_flat,size):
     print('-----------------POWER SPECTRUM-----------------')
     if (starname is None):
         print("'-' in input file")
@@ -75,8 +75,8 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
             middle_dark = 0.
         if (middle_flat is None):
             middle_flat = 1.
-        star=np.memmap(starname,mode='r', dtype='uint16', shape=(starframes,512,512))
-        middle_star=np.zeros((512,512))
+        star=np.memmap(starname,mode='r', dtype='uint16', shape=(starframes,size,size))
+        middle_star=np.zeros((size,size))
         print('-------Frames ignored in flat calculation--------')
         for i in range(starframes):
             if np.amax(star[i]) > 50000: # mask frames with particles 50000 -55000
@@ -90,9 +90,9 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
         image=None
         return middle_star
 
-    def dark_power_spectrum(darkname,darkframes):
-        dark=np.memmap(darkname,mode='r', dtype='uint16', shape=(darkframes,512,512))
-        dark_ps=zeros((512,512))
+    def dark_power_spectrum(darkname,darkframes,size):
+        dark=np.memmap(darkname,mode='r', dtype='uint16', shape=(darkframes,size,size))
+        dark_ps=zeros((size,size))
         for i in range(darkframes):
             if np.amax(dark[i]) > 5000: # mask frames with particles
                 continue # mask frames with particles
@@ -117,7 +117,9 @@ def obj_ps(starname,starframes, middle_dark, middle_flat):
 #        return clean_image
 
 def remove_background(image,freq_border):
-    outbound = image[freq_border+256:512,0:512]
+    size = image.shape[0]
+    half_size = size//2
+    outbound = image[freq_border+half_size:size,0:size]
     slice_out = np.mean(outbound, axis=0)
     clean_image = image - slice_out
     return clean_image
@@ -132,19 +134,21 @@ class ObjSpectrum():
         self.clean_ps = None
 
     def define_bounds(self):
-        freq_axis = np.arange(256.0)
+        size = self.values.shape[0]
+        half_size = size//2
+        freq_axis = np.arange(half_size)
         print('define frequence bound of spectrum')
         #plot star power spectrum profile
         plt.figure(figsize=(8,8))
         plt.subplot(2,1,1)
-        plt.plot(freq_axis,self.values[256,256:])
+        plt.plot(freq_axis,self.values[half_size,half_size:])
         plt.yscale('log')
-        plt.xlim(0,256)
+        plt.xlim(0,half_size)
         plt.title('x projection of spectrum')
         plt.subplot(2,1,2)
-        plt.plot(freq_axis,self.values[256:,256])
+        plt.plot(freq_axis,self.values[half_size:,half_size])
         plt.yscale('log')
-        plt.xlim(0,256)
+        plt.xlim(0,half_size)
         plt.title('y projection of spectrum')
         plt.show(block=False)
 
@@ -220,8 +224,6 @@ class Data():
         if (np.all(np.isnan(self.ref_ps.values))):
             print('defining borders without reference star..')
             self.star_ps.define_bounds()
-            self.ref_ps.b_bound = 0.
-            self.ref_ps.up_bound = 256.
         else:
             self.star_ps.define_bounds()
             self.ref_ps.define_bounds()
@@ -230,7 +232,6 @@ class Data():
         if (np.all(np.isnan(self.ref_ps.values))):
             print('removing background without reference star..')
             self.star_ps.rmbg()
-            self.ref_ps.clean_ps = np.ones_like(self.star_ps.values)
         else:
             self.star_ps.rmbg()
             self.ref_ps.rmbg()
@@ -238,7 +239,6 @@ class Data():
     def find_final_ps(self):
         if (np.all(np.isnan(self.ref_ps.values))):
             print('calculations final power spectrum without reference star..')
-            self.ref_ps.values = np.ones_like(self.star_ps.values)
             self.final_ps.values = self.star_ps.values
             self.rmbg_final_ps.values = self.star_ps.clean_ps
 

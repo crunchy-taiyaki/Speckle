@@ -1,0 +1,29 @@
+# TYC1947_00290_1
+#filter 700
+#11.05.2020
+# star
+D:\Speckle_data\TYC1947_00290_1\20200511\TYC1947_290_1_700.dat
+# star frames number
+2000
+# dark
+D:\Speckle_data\TYC1947_00290_1\20200511\dark1.dat
+# dark frames number
+2000
+# flat
+D:\Speckle_data\TYC1947_00290_1\20200511\flat700_mag16.dat
+# flat frames number
+2000
+# reference star
+-
+# reference frames number
+0
+# reference dark
+-
+# reference dark frames number
+0
+# store all images to folder
+D:\Speckle_data\TYC1947_00290_1\20200511\speckle_result_700_no_ref\images
+# store all data, arrays to folder
+D:\Speckle_data\TYC1947_00290_1\20200511\speckle_result_700_no_ref\data
+# working directory
+-

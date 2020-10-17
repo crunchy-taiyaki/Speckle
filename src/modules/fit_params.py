@@ -20,6 +20,7 @@ def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag, zone_flag):
     #read data from files
     data = Data()
     data.read_from(files.data)
+    size = data.star_ps.values.shape[0]
 
     #enter fit parameters
     flag = input_fit_parameters.flag
@@ -31,7 +32,7 @@ def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag, zone_flag):
         model = Models.binary
         initial_parameters = BinaryInitialParameters(input_fit_parameters.dm21,input_fit_parameters.x2,input_fit_parameters.y2)
 
-    uv_grid = Grid(size=512).uv_meshgrid()
+    uv_grid = Grid(size).uv_meshgrid()
     bottom_freq_border = input_fit_parameters.b_freq_border
     upper_freq_border = input_fit_parameters.up_freq_border
     bandwidth = input_fit_parameters.bandwidth

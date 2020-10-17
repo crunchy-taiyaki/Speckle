@@ -20,6 +20,8 @@ def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
     #read data from files
     data = Data()
     data.read_from(files.data)
+    size = data.star_ps.values.shape[0]
+    half_size = size//2
 
     #read i xy dm from files
     fit_result = FitResult(input_fit_parameters.flag)
@@ -31,8 +33,8 @@ def plot_fitted_i_xy_dm(filename_config,fit_parameters_config, rmbg_flag):
         fitted_data = data.final_ps
 
     # plot
-    half_freq_axis = np.arange(0,256.0)
-    freq_axis = np.arange(-256.0,256.0)
+    half_freq_axis = np.arange(0,half_size)
+    freq_axis = np.arange(-half_size,half_size)
     ymin,ymax=define_ylim(fitted_data)
 
     #______________________I1_____________________

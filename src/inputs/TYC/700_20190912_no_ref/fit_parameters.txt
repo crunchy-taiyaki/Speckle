@@ -1,0 +1,48 @@
+ #flag
+binary
+#dm21
+0.1
+#dm21_bottom_border
+0.
+#dm21_upper_border
+0.
+#x2 #-3.2
+-3.4
+#x2_bottom_border
+0.
+#x2_upper_border
+0.
+#y2 #-1.6
+-1.5
+#y2_bottom_border
+0.
+#y2_upper_border
+0.
+#dm31
+-
+#dm31_bottom_border
+-
+#dm31_upper_border
+-
+#x3
+-
+#x3_bottom_border
+-
+#x3_upper_border
+-
+#y3
+-
+#y3_bottom_border
+-
+#y3_upper_border
+-
+#bottom freq border
+20
+#upper freq border
+200
+#bandwidth #5
+5
+#mask bottom freq border 50-100
+70
+#mask upper freq border
+150

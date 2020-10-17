@@ -148,17 +148,15 @@ class Fit:
             self.ellipse_params = ellipse_params #GaussEllipse()
         self.result = FitResult(self.flag)
 
-    def ring_zones(self,mask):
+    def ring_zones(self,mask,size):
         f_ar_lenght = len(self.result.f_ar)
         for i in range(f_ar_lenght):
-            #zones[i] = ring_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
-            mask[i] = ring_logical_mask(512,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
+            mask[i] = ring_logical_mask(size,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
 
-    def elliptic_zones(self,mask):
+    def elliptic_zones(self,mask,size):
         f_ar_lenght = len(self.result.f_ar)
         for i in range(f_ar_lenght):
-            #zones[i] = elliptic_mask(self.ps.values,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth,self.ellipse_params)
-            mask[i] = elliptic_logical_mask(512,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
+            mask[i] = elliptic_logical_mask(size,self.result.f_ar[i],self.result.f_ar[i]+self.bandwidth)
 
  
     def plot_fit_izone(self,i,mask,fit_result):
@@ -214,13 +212,12 @@ class Fit:
             self.result.x3_ar = np.zeros(f_ar_lenght)
             self.result.y3_ar = np.zeros(f_ar_lenght)
         
-        size = 512
-#        zones = np.ma.array(np.zeros((f_ar_lenght,size,size)))
+        size = self.ps.values.shape[0]
         mask = np.ma.array(np.zeros((f_ar_lenght,size,size)))
         if (self.zone_flag == 'ellipse'):
-            self.elliptic_zones(mask)
+            self.elliptic_zones(mask,size)
         else:
-            self.ring_zones(mask)
+            self.ring_zones(mask,size)
 
         #fitting
         print('start fitting dm and xy')

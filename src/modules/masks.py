@@ -6,8 +6,9 @@ from grid import Grid
 
 def ring_mask(img, r1, r2):
     H, W = img.shape
+    half_size = H//2
     x, y = np.meshgrid(np.arange(W), np.arange(H))
-    d2 = (x - 256)**2 + (y - 256)**2
+    d2 = (x - half_size)**2 + (y - half_size)**2
     mask = d2 < (r1)**2
     mask1 = d2 > (r2)**2
     img_masked_ring = np.copy(img)
@@ -15,9 +16,10 @@ def ring_mask(img, r1, r2):
     img_masked_ring = np.ma.array(img_masked_ring, mask = mask1)
     return img_masked_ring
 
-def ring_logical_mask(frame_size, r1, r2):
-    x, y = np.meshgrid(np.arange(frame_size), np.arange(frame_size))
-    d2 = (x - 256)**2 + (y - 256)**2
+def ring_logical_mask(size, r1, r2):
+    half_size = size//2
+    x, y = np.meshgrid(np.arange(size), np.arange(size))
+    d2 = (x - half_size)**2 + (y - half_size)**2
     mask1 = d2 < (r1)**2
     mask2 = d2 > (r2)**2
     mask = np.logical_or(mask1,mask2)
@@ -56,9 +58,10 @@ def elliptic_mask(img,r1,r2,ellipse_params):
     b_bottom = r1*ellipse_params.sigma_y/ellipse_params.sigma_x
     a_upper = r2
     b_upper = r2*ellipse_params.sigma_y/ellipse_params.sigma_x
-    H, W = img.shape
-    x, y = np.meshgrid(np.arange(W), np.arange(H))
-    x -= 256; y-= 256
+    size = img.shape
+    half_size = size//2
+    x, y = np.meshgrid(np.arange(size), np.arange(size))
+    x -= half_size; y-= half_size
     x_new, y_new = rotate(x,y,ellipse_params.theta)
     if (a_bottom==0 or b_bottom==0):
         mask = x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1
@@ -67,13 +70,14 @@ def elliptic_mask(img,r1,r2,ellipse_params):
     masked_img = np.ma.array(img,mask=mask)
     return masked_img
 
-def elliptic_logical_mask(frame_size,r1,r2,ellipse_params):
+def elliptic_logical_mask(size,r1,r2,ellipse_params):
     a_bottom = r1
     b_bottom = r1*ellipse_params.sigma_y/ellipse_params.sigma_x
     a_upper = r2
     b_upper = r2*ellipse_params.sigma_y/ellipse_params.sigma_x
-    x, y = np.meshgrid(np.arange(frame_size), np.arange(frame_size))
-    x -= 256; y-= 256
+    x, y = np.meshgrid(np.arange(size), np.arange(size))
+    half_size = size//2
+    x -= half_size; y-= half_size
     x_new, y_new = rotate(x,y,ellipse_params.theta)
     if (a_bottom==0 or b_bottom==0):
         mask = x_new**2/a_upper**2 + y_new**2/b_upper**2 > 1

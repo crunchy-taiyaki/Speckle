@@ -13,6 +13,8 @@ def plot_dark_flat_and_spectra_image(filename_config):
 
     #read data from files
     data.read_from(files.data)
+    size = data.star_ps.shape[0]
+    half_size = size//2
 
     #plot spectra for finding bound freq
     #plt.figure()
@@ -25,28 +27,28 @@ def plot_dark_flat_and_spectra_image(filename_config):
 
     plt.figure()
     vmin,vmax = define_ylim(data.ref_ps)
-    plt.imshow(np.log(data.ref_ps.values), cmap='gray',vmin=10.,vmax=15.,extent=[-256.0,256.0,-256.0,256.0])
+    plt.imshow(np.log(data.ref_ps.values), cmap='gray',vmin=10.,vmax=15.,extent=[-half_size,half_size,-half_size,half_size])
     plt.title('ref')
     plt.colorbar()
     plt.savefig(files.images + '\\ref_ps.png')
 
     plt.figure()
     vmin,vmax = define_ylim(data.star_ps)
-    plt.imshow(np.log(data.star_ps.values), cmap='gray',vmin=11.,vmax=13.,extent=[-256.0,256.0,-256.0,256.0])
+    plt.imshow(np.log(data.star_ps.values), cmap='gray',vmin=11.,vmax=13.,extent=[-half_size,half_size,-half_size,half_size])
     plt.title('star')
     plt.colorbar()
     plt.savefig(files.images + '\\star_ps.png')
 
     plt.figure()
     vmin,vmax = define_ylim(data.final_ps)
-    plt.imshow(data.final_ps.values, cmap='gray',vmin=vmin,vmax=vmax,extent=[-256.0,256.0,-256.0,256.0])
+    plt.imshow(data.final_ps.values, cmap='gray',vmin=vmin,vmax=vmax,extent=[-half_size,half_size,-half_size,half_size])
     plt.title('final ps')
     plt.colorbar()
     plt.savefig(files.images + '\\final_ps.png')
 
     plt.figure()
     vmin,vmax = define_ylim(data.rmbg_final_ps)
-    plt.imshow(data.rmbg_final_ps.values, cmap='gray',vmin=vmin,vmax=vmax,extent=[-256.0,256.0,-256.0,256.0])
+    plt.imshow(data.rmbg_final_ps.values, cmap='gray',vmin=vmin,vmax=vmax,extent=[-half_size,half_size,-half_size,half_size])
     plt.title('rmbg final ps')
     plt.colorbar()
     plt.savefig(files.images + '\\final_rmbg_ps.png')
