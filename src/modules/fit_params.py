@@ -1,7 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from initial_parameters import DataFiles
 from power_spectrum import Data
+import matplotlib.pyplot as plt
+from file_reader import InputReader, FitParametersReader
+from spectra_calculator import Data
 from models import Models
 from fit import FitParameters, Fit, BinaryInitialParameters, TripleInitialParameters
 from grid import Grid
@@ -10,12 +11,12 @@ from masks import ellipse_parameters
 def fit_i_xy_dm(filename_config, fit_parameters_config, rmbg_flag, zone_flag):
 
     #read config file
-    files = DataFiles()
-    files.read_input(filename_config)
-    files.info()
+    files = InputReader()
+    files.read(filename_config)
+
     #read fit parameters from file
-    input_fit_parameters = FitParameters()
-    input_fit_parameters.read_input(fit_parameters_config)
+    input_fit_parameters = FitParametersReader()
+    input_fit_parameters.read(fit_parameters_config)
 
     #read data from files
     data = Data()

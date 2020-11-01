@@ -62,7 +62,7 @@ sample.read_from(files.data)
 
 # fina parameters
 final_parameters = final_result(filename_config,fit_parameters_config,angle_config,'180')
-size = data.star_ps.shape[0]
+size = data.star_ps.values.shape[0]
 half_size = size//2
 u,v = Grid(size).uv_meshgrid()
 
@@ -205,23 +205,44 @@ else:
         plt.savefig(files.images + '\\model_ps_y.png')
 
         plt.figure()
-        for i in range(sample_f_ar_lenght):
-            clean_model_data = model(u,v,sample.I1[i],\
+        for i in range(f_ar_lenght):
+            residuals = ps - model(u,v,fit_result.I1_ar[i],\
+                                        fit_result.dm21_ar[i],fit_result.x2_ar[i],fit_result.y2_ar[i])
+            plt.imshow(ring_mask(residuals,\
+                fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth), cmap='gray')
+        plt.title('residuals: ps-model')
+        plt.savefig(files.images + '\\residuals.png')
+
+        plt.figure()
+        for i in range(f_ar_lenght):
+            clean_model_data = model(u,v,fit_result.I1_ar[i],\
                                         final_parameters.dm21,final_parameters.x2,final_parameters.y2)
-            plt.plot(freq_axis,ring_mask(clean_model_data,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)[half_size,:],\
-                      color='darkorange',label='model')
-        plt.plot(freq_axis,ring_mask(ps,sample.f[0],sample.f[-1])[half_size,:],color='black',alpha=0.6,label='ps')
+            plt.plot(freq_axis,ring_mask(clean_model_data,\
+                                         fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)[half_size,:],\
+                      color='red',label='model')
+            clean_model_data = model(u,v,fit_result.I1_ar[i],\
+                                        0.2,final_parameters.x2,final_parameters.y2)
+            plt.plot(freq_axis,ring_mask(clean_model_data,\
+                                         fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)[half_size,:],\
+                      color='blue',label='dm=0.2')
+        plt.plot(freq_axis,ring_mask(ps,fit_result.f_ar[0],fit_result.f_ar[-1])[half_size,:],color='black',alpha=0.6,label='ps')
         plt.yscale('log')
         plt.title('clean model_ps x')
         plt.savefig(files.images + '\\clean_model_ps_x.png')
 
         plt.figure()
-        for i in range(sample_f_ar_lenght):
-            clean_model_data = model(u,v,sample.I1[i],\
+        for i in range(f_ar_lenght):
+            clean_model_data = model(u,v,fit_result.I1_ar[i],\
                                         final_parameters.dm21,final_parameters.x2,final_parameters.y2)
-            plt.plot(freq_axis,ring_mask(clean_model_data,sample.f[i],sample.f[i]+input_fit_parameters.bandwidth)[:,half_size],\
-                                         color='darkorange',label='model')
-        plt.plot(freq_axis,ring_mask(ps,sample.f[0],sample.f[-1])[:,half_size],color='black',alpha=0.6,label='ps')
+            plt.plot(freq_axis,ring_mask(clean_model_data,\
+                                         fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)[:,half_size],\
+                                            color='red',label='model')
+            clean_model_data = model(u,v,fit_result.I1_ar[i],\
+                                        0.2,final_parameters.x2,final_parameters.y2)
+            plt.plot(freq_axis,ring_mask(clean_model_data,\
+                                         fit_result.f_ar[i],fit_result.f_ar[i]+input_fit_parameters.bandwidth)[:,half_size],\
+                                            color='blue',label='dm=0.2')
+        plt.plot(freq_axis,ring_mask(ps,fit_result.f_ar[0],fit_result.f_ar[-1])[:,half_size],color='black',alpha=0.6,label='ps')
         plt.yscale('log')
         plt.title('clean model_ps y')
         plt.savefig(files.images + '\\clean_model_ps_y.png')

@@ -24,7 +24,6 @@ def plot_acf(filename_config):
     half_size = size//2
     plt.figure()
     plt.imshow(acf, cmap='gray', vmin=np.min(acf), vmax=np.max(acf), extent=[-half_size,half_size,half_size,-half_size])
-    plt.scatter(x550,y550, color='red', s=0.5)
     plt.title('acf')
     plt.savefig(files.images + '\\acf final_ps.png')
     plt.show(block=False)

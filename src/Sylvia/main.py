@@ -1,16 +1,16 @@
 
 import sys
 sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\modules")
-from info import input_files_info
-from obj_spectra_preproc import objects_spectra_preproc
-from final_ps import final_ps
-from fit_params import fit_i_xy_dm
-from find_xy import guess_xy
-from plot_fit import plot_fitted_i_xy_dm
-from plot_projections import plot_projections
-from plot_images import plot_dark_flat_and_spectra_image
-from stats import plot_residuals, define_sample, normality_test
-from final_params import final_result
+from file_reader import InputReader
+from spectra_calculator import Data
+from plot import plot_images, plot_spectra_slices
+
+#from fit_params import fit_i_xy_dm
+#from find_xy import guess_xy
+#from plot_fit import plot_fitted_i_xy_dm
+
+#from stats import plot_residuals, define_sample, normality_test
+#from final_params import final_result
 
 ### TYC1947_00290_1 09 12 2019 700
 #filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20190912\\input.txt'
@@ -32,15 +32,15 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\fit_parameters.txt'
 #angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\angle.txt'
 
-#input_files_info(filename_config)
-#objects_spectra_preproc(filename_config)
-#final_ps(filename_config)
-#plot_dark_flat_and_spectra_image(filename_config)
-#plot_projections(filename_config)
+#InputReader().info(filename_config)
+#Data().calc_raw_data(filename_config,size=512)
+#Data().calc_final_ps_from_raw_data(filename_config)
+#plot_images(filename_config)
+#plot_spectra_slices(filename_config)
 #guess_xy(filename_config)
-#fit_i_xy_dm(filename_config, fit_parameters_config,'','') #flags: 'rmbg' or '' and 'ellipse or '' 
+#fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg','') #flags: 'rmbg' or '' and 'ellipse or '' 
 #plot_fitted_i_xy_dm(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
 #plot_residuals(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
-#define_sample(filename_config,fit_parameters_config, residual_level=0.25)
+#define_sample(filename_config,fit_parameters_config, residual_level=1.0)
 #normality_test(filename_config,fit_parameters_config)
-final_result(filename_config,fit_parameters_config,angle_config,'180')
+#final_result(filename_config,fit_parameters_config,angle_config,'180')

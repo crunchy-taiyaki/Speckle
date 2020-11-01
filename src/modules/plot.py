@@ -1,32 +1,144 @@
-import matplotlib.pyplot as plt
 import numpy as np
-from masks import ring_mask
+import matplotlib.pyplot as plt
+from file_reader import InputReader
+from spectra_calculator import Data
 
-def define_ylim(image):
-    masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
-    ymin = np.min(masked_image)
-    ymax = np.max(masked_image)
-    return ymin,ymax
+def plot_images(filename_config):
+    files = InputReader()
+    files.read(filename_config)
+    data = Data()
 
-def slice_image(image,x1,y1,x2,y2):
-    size = image.shape[0]
+    #read data from files
+    data.read_from(files.data)
+    size = data.star_ps.values.shape[0]
     half_size = size//2
-    x1+=half_size; x2+=half_size
-    y1+=half_size; y2+=half_size
-    projection = np.ones(512)*np.nan
-    k = (y2-y1)/(x2-x1)
-    for x in range(0, size-1):
-        y = int(k*(x-x1)+y1)
-        if y > 0 and y < size:
-            projection[x] = image[x,y]
-    return projection
 
-def plot_rings_borders(x_center,y_center,r1,r2):
-    bottom_ring=plt.Circle((x_center,y_center), r1, color='orange', fill=False)
-    upper_ring=plt.Circle((x_center,y_center), r2, color='orange', fill=False)
-    plt.gcf().gca().add_artist(bottom_ring)
-    plt.gcf().gca().add_artist(upper_ring)
+    plt.figure()
+    plt.imshow(np.log(data.star_ps.values),cmap='gray',extent=[-half_size,half_size,-half_size,half_size])
+    plt.title('star')
+    plt.colorbar()
+    plt.savefig(files.images + '\\star_ps.png')
+
+    if (files.ref is None):
+        plt.figure()
+        plt.imshow(np.log(data.final_ps.values), cmap='gray',extent=[-half_size,half_size,-half_size,half_size])
+        plt.title('final ps')
+        plt.colorbar()
+        plt.savefig(files.images + '\\final_ps.png')
+
+        plt.figure()
+        plt.imshow(np.log(data.rmbg_final_ps.values), cmap='gray',extent=[-half_size,half_size,-half_size,half_size])
+        plt.title('rmbg final ps')
+        plt.colorbar()
+        plt.savefig(files.images + '\\final_rmbg_ps.png')
+    else:
+        plt.imshow(np.log(data.ref_ps.values), cmap='gray',extent=[-half_size,half_size,-half_size,half_size])
+        plt.title('ref')
+        plt.colorbar()
+        plt.savefig(files.images + '\\ref_ps.png')
+
+        plt.figure()
+        plt.imshow(data.final_ps.values, cmap='gray',extent=[-half_size,half_size,-half_size,half_size])
+        plt.title('final ps')
+        plt.colorbar()
+        plt.savefig(files.images + '\\final_ps.png')
+
+        plt.figure()
+        plt.imshow(data.rmbg_final_ps.values, cmap='gray',extent=[-half_size,half_size,-half_size,half_size])
+        plt.title('rmbg final ps')
+        plt.colorbar()
+        plt.savefig(files.images + '\\final_rmbg_ps.png')
+    plt.show()
 
 
+def plot_spectra_slices(filename_config):
 
+    files = InputReader()
+    files.read(filename_config)
 
+    #read data from files
+    data = Data()
+    data.read_from(files.data)
+
+    size = data.star_ps.values.shape[0]
+    half_size = size//2
+    freq_axis = np.arange(-half_size,half_size)
+
+    scale = 'log'
+
+    plt.plot(freq_axis, data.star_ps.values[half_size,:])
+    plt.yscale(scale)
+    plt.title('star x')
+    plt.savefig(files.images + '\\star_ps_x.png')
+
+    plt.figure()
+    plt.plot(freq_axis, data.star_ps.values[:,half_size])
+    plt.yscale(scale)
+    plt.title('star y')
+    plt.savefig(files.images + '\\star_ps_y.png')
+
+    plt.figure()
+    plt.plot(freq_axis, data.star_ps.clean_ps[half_size,:])
+    plt.yscale(scale)
+    plt.title('rmbg star x')
+    plt.savefig(files.images + '\\rmbg_star_ps_x.png')
+
+    plt.figure()
+    plt.plot(freq_axis, data.star_ps.clean_ps[:,half_size])
+    plt.yscale(scale)
+    plt.title('rmbg star y')
+    plt.savefig(files.images + '\\rmbg_star_ps_y.png')
+
+    if (files.ref is not None):    
+        plt.plot(freq_axis, data.ref_ps.values[half_size,:])
+        plt.yscale(scale)
+        plt.title('ref x')
+        plt.savefig(files.images + '\\ref_ps_x.png')
+
+        plt.figure()
+        plt.plot(freq_axis, data.ref_ps.values[:,half_size])
+        plt.yscale(scale)
+        plt.title('ref y')
+        plt.savefig(files.images + '\\ref_ps_y.png')
+
+        plt.figure()
+        plt.plot(freq_axis, data.ref_ps.clean_ps[half_size,:])
+        plt.yscale(scale)
+        plt.title('rmbg ref x')
+        plt.savefig(files.images + '\\rmbg_ref_ps_x.png')
+
+        plt.figure()
+        plt.plot(freq_axis, data.ref_ps.clean_ps[:,half_size])
+        plt.yscale(scale)
+        plt.title('rmbg ref y')
+        plt.savefig(files.images + '\\rmbg_ref_ps_y.png')
+
+    if (files.ref is None):
+        scale = 'log'
+    else:
+        scale = 'linear'
+
+    plt.figure()
+    plt.plot(freq_axis, data.final_ps.values[half_size,:])
+    plt.yscale(scale)
+    plt.title('final ps x')
+    plt.savefig(files.images + '\\final_ps_x.png')
+
+    plt.figure()
+    plt.plot(freq_axis, data.final_ps.values[:,half_size])
+    plt.yscale(scale)
+    plt.title('final ps y')
+    plt.savefig(files.images + '\\final_ps_y.png')
+
+    plt.figure()
+    plt.plot(freq_axis, data.rmbg_final_ps.values[half_size,:])
+    plt.yscale(scale)
+    plt.title('rmbg final ps x')
+    plt.savefig(files.images + '\\final_rmbg_ps_x.png')
+
+    plt.figure()
+    plt.plot(freq_axis, data.rmbg_final_ps.values[:,half_size])
+    plt.yscale(scale)
+    plt.title('rmbg final ps y')
+    plt.savefig(files.images + '\\final_rmbg_ps_y.png')
+    plt.show()

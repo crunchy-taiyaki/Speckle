@@ -1,16 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from file_reader import InputReader
 from masks import ring_mask
-
-
-def middle_fft(imagename,imageframes,size):
-    images = np.memmap(imagename,mode='r', dtype='uint16', shape=(imageframes,size,size))
-    middle_fft = np.zeros((size,size))
-    for i in range(imageframes):
-        middle_fft = middle_fft + np.fft.fft(images[i])
-    middle_fft /= imageframes
-    images = None
-    return middle_fft
 
 
 def middle_dark(darkname,darkframes,size):
@@ -90,36 +81,26 @@ def obj_ps(starname,starframes, middle_dark, middle_flat,size):
         image=None
         return middle_star
 
-    def dark_power_spectrum(darkname,darkframes,size):
-        dark=np.memmap(darkname,mode='r', dtype='uint16', shape=(darkframes,size,size))
-        dark_ps=zeros((size,size))
-        for i in range(darkframes):
-            if np.amax(dark[i]) > 5000: # mask frames with particles
-                continue # mask frames with particles
-            imagedark=(dark[i]-middle_dark)/(middle_flat-middle_dark)
-            imagedark=np.abs(np.fft.fft2(imagedark))**2
-            dark_ps+=imagedark
-            if i%250==0:
-                print('Frames: %i'%i)
-        dark_ps/=darkframes
-        dark_ps=np.fft.fftshift(dark_ps)
-        imagedark=None
-        return dark_ps
-
-#def remove_background(image,freq_border):
-#    if (freq_border==512*np.sqrt(2)):
-#        return image
-#    else:
-#        frame_edge = 512*np.sqrt(2)
-#        background = ring_mask(image,freq_border,frame_edge)
-#        slice_out = np.mean(background)
-#        clean_image = image - slice_out
-#        return clean_image
+def dark_power_spectrum(darkname,darkframes,size):
+    dark=np.memmap(darkname,mode='r', dtype='uint16', shape=(darkframes,size,size))
+    dark_ps=zeros((size,size))
+    for i in range(darkframes):
+        if np.amax(dark[i]) > 5000: # mask frames with particles
+            continue # mask frames with particles
+        imagedark=(dark[i]-middle_dark)/(middle_flat-middle_dark)
+        imagedark=np.abs(np.fft.fft2(imagedark))**2
+        dark_ps+=imagedark
+        if i%250==0:
+            print('Frames: %i'%i)
+    dark_ps/=darkframes
+    dark_ps=np.fft.fftshift(dark_ps)
+    imagedark=None
+    return dark_ps
 
 def remove_background(image,freq_border):
     size = image.shape[0]
     half_size = size//2
-    outbound = image[freq_border+half_size:size,0:size]
+    outbound = image[freq_border+half_size:,:]
     slice_out = np.mean(outbound, axis=0)
     clean_image = image - slice_out
     return clean_image
@@ -178,20 +159,6 @@ class Data():
         self.final_ps = ObjSpectrum()
         self.rmbg_final_ps = ObjSpectrum()
 
-    def save_to(self,result_folder_path):
-        path = result_folder_path
-        np.save(path + '\\mean_dark.npy',self.dark)
-        np.save(path + '\\mean_flat.npy',self.flat)
-        np.save(path + '\\mean_star_ps.npy',self.star_ps.values)
-        np.save(path + '\\mean_star_clean_ps.npy',self.star_ps.clean_ps)
-        np.save(path + '\\mean_ref_ps.npy',self.ref_ps.values)
-        np.save(path + '\\mean_ref_clean_ps.npy',self.ref_ps.clean_ps)
-        np.save(path + '\\final_ps.npy',self.final_ps.values)
-        np.save(path + '\\final_rmbg_ps.npy',self.rmbg_final_ps.values)
-        np.save(path + '\\freq_bound.npy',np.array([self.star_ps.b_bound,self.star_ps.up_bound,\
-                                                    self.ref_ps.b_bound,self.ref_ps.up_bound,\
-                                                    self.final_ps.b_bound,self.final_ps.up_bound\
-            ]))
 
     def read_raw_data_from(self,result_folder_path):
         path = result_folder_path
@@ -199,6 +166,20 @@ class Data():
         self.flat = np.load(path + '\\mean_flat.npy')
         self.star_ps.values = np.load(path + '\\mean_star_ps.npy')
         self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
+
+    def calc_raw_data(self,filename_config,size):
+        files = InputReader()
+        files.read(filename_config)
+        #calc all data
+        print('data calculation...')
+        self.dark = middle_dark(files.dark,files.dark_frames,size)
+        self.ref_dark = middle_dark(files.ref_dark,files.ref_dark_frames,size)
+        self.flat = middle_flat(files.flat,files.flat_frames,size)
+        self.star_ps.values = obj_ps(files.star,files.star_frames, self.dark, self.flat,size)
+        self.ref_ps.values = obj_ps(files.ref,files.ref_frames, self.ref_dark, self.flat,size)
+        print('all done!')
+        self.save_to(files.data)
+        print('data saved')
 
     def read_from(self,result_folder_path):
         path = result_folder_path
@@ -220,6 +201,7 @@ class Data():
         self.rmbg_final_ps.b_bound = self.final_ps.b_bound
         self.rmbg_final_ps.up_bound = self.final_ps.up_bound
 
+
     def define_freq_bounds(self):
         if (np.all(np.isnan(self.ref_ps.values))):
             print('defining borders without reference star..')
@@ -236,12 +218,11 @@ class Data():
             self.star_ps.rmbg()
             self.ref_ps.rmbg()
 
-    def find_final_ps(self):
+    def calc_final_ps(self):
         if (np.all(np.isnan(self.ref_ps.values))):
             print('calculations final power spectrum without reference star..')
             self.final_ps.values = self.star_ps.values
             self.rmbg_final_ps.values = self.star_ps.clean_ps
-
             self.final_ps.b_bound = self.star_ps.b_bound
             self.final_ps.up_bound = self.star_ps.up_bound
         else:
@@ -253,3 +234,29 @@ class Data():
             self.rmbg_final_ps.b_bound = self.final_ps.b_bound
             self.rmbg_final_ps.up_bound = self.final_ps.up_bound
 
+    def save_to(self,result_folder_path):
+        path = result_folder_path
+        np.save(path + '\\mean_dark.npy',self.dark)
+        np.save(path + '\\mean_flat.npy',self.flat)
+        np.save(path + '\\mean_star_ps.npy',self.star_ps.values)
+        np.save(path + '\\mean_star_clean_ps.npy',self.star_ps.clean_ps)
+        np.save(path + '\\mean_ref_ps.npy',self.ref_ps.values)
+        np.save(path + '\\mean_ref_clean_ps.npy',self.ref_ps.clean_ps)
+        np.save(path + '\\final_ps.npy',self.final_ps.values)
+        np.save(path + '\\final_rmbg_ps.npy',self.rmbg_final_ps.values)
+        np.save(path + '\\freq_bound.npy',np.array([self.star_ps.b_bound,self.star_ps.up_bound,\
+                                                    self.ref_ps.b_bound,self.ref_ps.up_bound,\
+                                                    self.final_ps.b_bound,self.final_ps.up_bound\
+            ]))
+
+    def calc_final_ps_from_raw_data(self,filename_config):
+        files = InputReader()
+        files.read(filename_config)
+
+        self.read_raw_data_from(files.data)
+        self.define_freq_bounds()
+        self.rmbg()
+        self.calc_final_ps()
+        print('final power spectrum was calculated')
+        self.save_to(files.data)
+        print('all data were saved')

@@ -4,102 +4,6 @@ from scipy.optimize import minimize
 from grid import Grid
 from masks import GaussEllipse, ring_mask,ring_logical_mask,elliptic_mask,elliptic_logical_mask
 
-def define_ylim(image):
-    masked_image = ring_mask(image.values, image.b_bound, image.up_bound)
-    ymin = np.min(masked_image)
-    ymax = np.max(masked_image)
-    return ymin,ymax
-
-
-class BinaryInitialParameters:
-
-    def __init__(self,dm21,x2,y2):
-        self.I1 = None
-        self.dm21 = dm21
-        self.x2 = x2
-        self.y2 = y2
-
-    def array(self):
-        return np.array([self.I1,self.dm21,self.x2,self.y2])
-
-
-class TripleInitialParameters:
-
-    def __init__(self,dm21,x2,y2,dm31,x3,y3):
-        self.I1 = None
-        self.dm21 = dm21
-        self.x2 = x2
-        self.y2 = y2
-        self.dm31 = dm31
-        self.x3 = x3
-        self.y3 = y3
-
-    def array(self):
-        return np.array([self.I1,self.dm21,self.x2,self.y2,self.dm31,self.x3,self.y3])
-
-class FitParameters():
-    def __init__(self):
-        self.flag = None
-        self.dm21 = None
-        self.dm21_bottom = None
-        self.dm21_upper = None
-        self.x2 = None
-        self.x2_bottom = None
-        self.x2_upper = None
-        self.y2 = None
-        self.y2_bottom = None
-        self.y2_upper = None
-        # third star parameters
-        self.dm31 = None
-        self.dm31_bottom = None
-        self.dm31_upper = None
-        self.x3 = None
-        self.x3_bottom = None
-        self.x3_upper = None
-        self.y3 = None
-        self.y3_bottom = None
-        self.y3_upper = None
-        self.b_freq_border = None
-        self.up_freq_border = None
-        self.bandwidth = None
-
-    def read_input(self,file):
-        info = []
-        with open(file, 'r') as input:
-            for line in input:
-                text = line.strip()
-                if text.startswith('#'):
-                    continue
-                info.append(text)
-        self.flag = info[0]
-        self.dm21 = float(info[1])
-        self.dm21_bottom = float(info[2])
-        self.dm21_upper = float(info[3])
-        self.x2 = float(info[4])
-        self.x2_bottom = float(info[5])
-        self.x2_upper = float(info[6])
-        self.y2 = float(info[7])
-        self.y2_bottom = float(info[8])
-        self.y2_upper = float(info[9])
-
-        if (self.flag == 'triple'):
-            self.dm31 = float(info[10])
-            self.dm31_bottom = float(info[11])
-            self.dm31_upper = float(info[12])
-            self.x3 = float(info[13])
-            self.x3_bottom = float(info[14])
-            self.x3_upper = float(info[15])
-            self.y3 = float(info[16])
-            self.y3_bottom = float(info[17])
-            self.y3_upper = float(info[18])
-
-        self.b_freq_border = int(info[19])
-        self.up_freq_border = int(info[20])
-        self.bandwidth = int(info[21])
-        self.mask_b_freq_border = int(info[22])
-        self.mask_up_freq_border = int(info[23])
-
-
 class FitResult():
     def __init__(self,flag):
         self.flag = flag
@@ -109,14 +13,10 @@ class FitResult():
         self.dm21_ar = None
         self.x2_ar = None
         self.y2_ar = None
-        self.r12_ar = None
-        self.psi2_ar = None
         # third star parameters
         self.dm31_ar = None
         self.x3_ar = None
         self.y3_ar = None
-        self.r13_ar = None
-        self.psi3_ar = None
 
     def read_i_xy_dm_freq_from(self,result_folder_path):
         path = result_folder_path
@@ -132,9 +32,10 @@ class FitResult():
             self.y3_ar = np.load(path + '\\y3_ar.npy')
 
 
-
 class Fit:
-    def __init__(self,ps,model,initial_parameters,uv_grid,bottom_freq_border,upper_freq_border,bandwidth,flag,zone_flag=None,ellipse_params=None):
+    def __init__(self,ps,model,initial_parameters,uv_grid,\
+                 bottom_freq_border,upper_freq_border,bandwidth,\
+                 flag,zone_flag=None,ellipse_params=None):
         self.bandwidth = bandwidth
         self.bottom_freq_border = bottom_freq_border
         self.upper_freq_border = upper_freq_border
@@ -171,7 +72,8 @@ class Fit:
         plt.plot(freq_axis, zone_values[256,:],label='data')
         plt.plot(freq_axis, init_guess_values[256,:], label='init guess')
         plt.plot(freq_axis, model_values[256,:],label='model')
-        plt.ylim(ymin,ymax)
+        #plt.ylim(ymin,ymax)
+        plt.yscale('log')
         plt.title('x projection')
         plt.legend()
 
@@ -180,7 +82,8 @@ class Fit:
         plt.plot(freq_axis, zone_values[:,256],label='data')
         plt.plot(freq_axis, init_guess_values[:,256], label='init guess')
         plt.plot(freq_axis, model_values[:,256],label='model')
-        plt.ylim(ymin,ymax)
+        #plt.ylim(ymin,ymax)
+        plt.yscale('log')
         plt.title('y projection')
         plt.legend()
         plt.show()
