@@ -1,12 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from initial_parameters import DataFiles
-from power_spectrum import Data
+from file_reader import InputReader
+from spectra_calculator import Data
 
 def calc_acf(filename_config):
-    files = DataFiles()
-    files.read_input(filename_config)
-    files.info()
+    #read config file
+    files = InputReader()
+    files.read(filename_config)
     data = Data()
 
     #read data from files
@@ -17,8 +17,9 @@ def calc_acf(filename_config):
     return acf
 
 def plot_acf(filename_config):
-    files = DataFiles()
-    files.read_input(filename_config)
+    #read config file
+    files = InputReader()
+    files.read(filename_config)
     acf = calc_acf(filename_config)
     size = acf.shape[0]
     half_size = size//2

@@ -4,13 +4,11 @@ sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\s
 from file_reader import InputReader
 from spectra_calculator import Data
 from plot import plot_images, plot_spectra_slices
-
-#from fit_params import fit_i_xy_dm
-#from find_xy import guess_xy
-#from plot_fit import plot_fitted_i_xy_dm
-
-#from stats import plot_residuals, define_sample, normality_test
-#from final_params import final_result
+from find_xy import guess_xy
+from fit import Fit
+from plot_fit import plot_fitted_i_xy_dm
+from stats import define_sample
+from final_params import final_result
 
 ### TYC1947_00290_1 09 12 2019 700
 #filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20190912\\input.txt'
@@ -38,9 +36,7 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #plot_images(filename_config)
 #plot_spectra_slices(filename_config)
 #guess_xy(filename_config)
-#fit_i_xy_dm(filename_config, fit_parameters_config,'rmbg','') #flags: 'rmbg' or '' and 'ellipse or '' 
-#plot_fitted_i_xy_dm(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
-#plot_residuals(filename_config,fit_parameters_config,'rmbg') #flag: 'rmbg' or ''
-#define_sample(filename_config,fit_parameters_config, residual_level=1.0)
-#normality_test(filename_config,fit_parameters_config)
-#final_result(filename_config,fit_parameters_config,angle_config,'180')
+#Fit(filename_config, fit_parameters_config).fit_i_xy_dm()
+#plot_fitted_i_xy_dm(filename_config,fit_parameters_config)
+#define_sample(filename_config,fit_parameters_config)
+final_result(filename_config,fit_parameters_config,angle_config,'180')

@@ -1,14 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from initial_parameters import DataFiles
-from power_spectrum import Data
+from file_reader import InputReader, FitParametersReader
+from spectra_calculator import Data
 from models import Models
-from fit import FitParameters, BinaryInitialParameters, TripleInitialParameters, FitResult
+from fit import FitResult
+from initial_parameters_builder import BinaryInitialParameters, BinaryInitialParametersFixDM, BinaryInitialParametersFixXY,\
+                                       TripleInitialParameters, TripleInitialParametersFixDM, TripleInitialParametersFixXY 
 from grid import Grid
 from stats import ResultSample
 from final_params import final_result
 from masks import ring_logical_mask, ring_mask
-from plot import plot_rings_borders
+from plot_tools import plot_rings_borders, to_polar
 
 ## triple hd52721 550 04_03_2020 no ref
 #filename_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\hd52721_550_04032020_no_ref\\input.txt'
@@ -40,27 +42,23 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\fit_parameters.txt'
 #angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\angle.txt'
 
-#read config file
-files = DataFiles()
-files.read_input(filename_config)
-files.info()
-#read fit parameters from file
-input_fit_parameters = FitParameters()
-input_fit_parameters.read_input(fit_parameters_config)
 
-#read data from files
+files = InputReader()
+files.read(filename_config)
+
 data = Data()
 data.read_from(files.data)
 
-#enter fit parameters
-flag = input_fit_parameters.flag
+input_fit_parameters = FitParametersReader()
+input_fit_parameters.read(fit_parameters_config)
 
-fit_result = FitResult(input_fit_parameters.flag)
-fit_result.read_i_xy_dm_freq_from(files.data)
-sample = ResultSample(input_fit_parameters.flag)
+#read i xy dm from files
+fit_result = FitResult(filename_config,fit_parameters_config)
+fit_result.read(files.data)
+
+sample = ResultSample(input_fit_parameters.star_type)
 sample.read_from(files.data)
 
-# fina parameters
 final_parameters = final_result(filename_config,fit_parameters_config,angle_config,'180')
 size = data.star_ps.values.shape[0]
 half_size = size//2
@@ -76,8 +74,9 @@ clean_model_data = np.empty_like(ps)
 
 
 freq_axis = np.arange(-half_size,half_size)
-print(sample.f)
-if (input_fit_parameters.flag == 'triple'):
+
+
+if (input_fit_parameters.star_type == 'triple'):
     model = Models.triple
     # model
     plt.figure()
@@ -246,6 +245,14 @@ else:
         plt.yscale('log')
         plt.title('clean model_ps y')
         plt.savefig(files.images + '\\clean_model_ps_y.png')
+
+        #pol, (rads,angs) = to_polar(ps)
+        #plt.figure()
+        #plt.imshow(pol, cmap='gray')
+
+        skimage.transform.warp_polar(ps,radius=256, multichannel=True)
+
+
     plt.show()
 
 

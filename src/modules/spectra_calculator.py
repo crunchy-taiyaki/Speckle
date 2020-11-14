@@ -107,7 +107,7 @@ def remove_background(image,freq_border):
 
 
 
-class ObjSpectrum():
+class ObjSpectrum:
     def __init__(self):
         self.values = None
         self.b_bound = None
@@ -148,7 +148,7 @@ class ObjSpectrum():
 
 
 
-class Data():
+class Data:
 
     def __init__(self):
         self.star_ps = ObjSpectrum()

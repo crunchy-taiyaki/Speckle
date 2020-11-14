@@ -1,19 +1,25 @@
- #flag
+#star type
 binary
+#remove background flag
+rmbg
+#type of fitting zones
+ring
+# fitting method
+fix_xy
 #dm21
-0.1
+0.09042068576572364
 #dm21_bottom_border
 0.
 #dm21_upper_border
 0.
 #x2
-0.24
+-0.2075995658152946
 #x2_bottom_border
 0.
 #x2_upper_border
 0.
 #y2
--4.5
+-4.190745877059791
 #y2_bottom_border
 0.
 #y2_upper_border
@@ -45,4 +51,4 @@ binary
 #mask bottom freq border 50-100
 50
 #mask upper freq border
-140
+100

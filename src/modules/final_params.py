@@ -1,6 +1,6 @@
 import numpy as np
-from initial_parameters import DataFiles
-from fit import FitParameters, FitResult
+from file_reader import InputReader, FitParametersReader
+from fit import FitResult
 from stats import ResultSample
 
 class Coordinate():
@@ -157,28 +157,28 @@ class FinalFitParameters():
 
 def final_result(filename_config,fit_parameters_config,angle_config,phase_flag):
     #read config file
-    files = DataFiles()
-    files.read_input(filename_config)
+    files = InputReader()
+    files.read(filename_config)
     coord_filename = files.data + '\\coord.txt'
     dm_xy_filename = files.data + '\\dm_xy.txt'
 
     #read fit parameters config
-    input_fit_parameters = FitParameters()
-    input_fit_parameters.read_input(fit_parameters_config)
+    input_fit_parameters = FitParametersReader()
+    input_fit_parameters.read(fit_parameters_config)
         
     #read samples
-    sample = ResultSample(input_fit_parameters.flag)
+    sample = ResultSample(input_fit_parameters.star_type)
     sample.read_from(files.data)
 
     #calc final values and errors
-    result = FinalFitParameters(input_fit_parameters.flag)
+    result = FinalFitParameters(input_fit_parameters.star_type)
     result.dm21 = np.median(sample.dm21)
     result.dm21_er = np.std(sample.dm21)
     result.x2 = np.median(sample.x2)
     result.x2_er = np.std(sample.x2)
     result.y2 = np.median(sample.y2)
     result.y2_er = np.std(sample.y2)
-    if (input_fit_parameters.flag == 'triple'):
+    if input_fit_parameters.star_type == 'triple':
         result.dm31 = np.median(sample.dm31)
         result.dm31_er = np.std(sample.dm31)
         result.x3 = np.median(sample.x3)
@@ -193,7 +193,7 @@ def final_result(filename_config,fit_parameters_config,angle_config,phase_flag):
     coord2.calc_paralactic_angle(angle_config)
     coord2.calc_polar()
     coord2.calc_equtorial()
-    if (input_fit_parameters.flag == 'triple'):
+    if input_fit_parameters.star_type == 'triple':
         coord3 = Coordinate(x=result.x3,y=result.y3,x_er=result.x3_er,y_er=result.y3_er,phase_flag=phase_flag)
         coord3.calc_paralactic_angle(angle_config)
         coord3.calc_polar()
@@ -213,7 +213,7 @@ def final_result(filename_config,fit_parameters_config,angle_config,phase_flag):
 
 
         output.write('\n')
-        if (input_fit_parameters.flag == 'triple'):
+        if input_fit_parameters.star_type == 'triple':
             output.write('r3_in_px:'+ str(coord3.r_in_px) + '+-' + str(coord3.r_in_px_er) + '[px]' + '\n')
             output.write('r3:'+ str(coord3.r) + '+-' + str(coord3.r_er) + '[arcsec]' + '\n')
             output.write('psi3:'+ str(coord3.psi*180/np.pi) + '+-' + str(coord3.psi_er*180/np.pi) + '[deg]' + '\n')
