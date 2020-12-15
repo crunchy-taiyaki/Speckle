@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from file_reader import InputReader
+from file_reader import FileInfoReader
 from masks import ring_mask
 
 
@@ -168,7 +168,7 @@ class Data:
         self.ref_ps.values = np.load(path + '\\mean_ref_ps.npy')
 
     def calc_raw_data(self,filename_config,size):
-        files = InputReader()
+        files = FileInfoReader()
         files.read(filename_config)
         #calc all data
         print('data calculation...')
@@ -250,7 +250,7 @@ class Data:
             ]))
 
     def calc_final_ps_from_raw_data(self,filename_config):
-        files = InputReader()
+        files = FileInfoReader()
         files.read(filename_config)
 
         self.read_raw_data_from(files.data)

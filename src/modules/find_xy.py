@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from file_reader import InputReader
+from file_reader import FileInfoReader
 from spectra_calculator import Data
 
 def calc_acf(filename_config):
     #read config file
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
     data = Data()
 
@@ -18,7 +18,7 @@ def calc_acf(filename_config):
 
 def plot_acf(filename_config):
     #read config file
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
     acf = calc_acf(filename_config)
     size = acf.shape[0]

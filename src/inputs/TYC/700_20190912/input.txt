@@ -25,5 +25,3 @@ D:\Speckle_data\TYC1947_00290_1\20191209\dark3_gain200.dat
 D:\Speckle_data\TYC1947_00290_1\20191209\speckle_result_700\images
 # store all data, arrays to folder
 D:\Speckle_data\TYC1947_00290_1\20191209\speckle_result_700\data
-# working directory
--

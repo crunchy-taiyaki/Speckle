@@ -1,13 +1,13 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from file_reader import InputReader
+from file_reader import FileInfoReader
 from spectra_calculator import Data
 from plot_tools import define_ylim
 
 def plot_spectra_projections(filename_config):
 
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
 
     #read data from files

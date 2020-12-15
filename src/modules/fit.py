@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
-from file_reader import InputReader, FitParametersReader
+from file_reader import FileInfoReader, FitParametersReader
 from spectra_calculator import Data
 from grid import Grid
 from models import Models
@@ -14,7 +14,7 @@ from masks import ring_logical_mask, elliptic_logical_mask
 class FitResult:
     def __init__(self,filename_config,fit_parameters_config):
         #read config file
-        files = InputReader()
+        files = FileInfoReader()
         files.read(filename_config)
         #read fit parameters from file
         input_fit_parameters = FitParametersReader()
@@ -118,7 +118,7 @@ class FitResult:
 class Fit:
     def __init__(self,filename_config, fit_parameters_config):
         #read config file
-        files = InputReader()
+        files = FileInfoReader()
         files.read(filename_config)
         self.filename_config = filename_config
         self.fit_parameters_config = fit_parameters_config
@@ -279,7 +279,7 @@ class Fit:
 
     def fit_i_xy_dm(self):
         #read config file
-        files = InputReader()
+        files = FileInfoReader()
         files.read(self.filename_config)
 
         if self.zone_type == 'ring':

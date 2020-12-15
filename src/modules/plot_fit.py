@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from file_reader import InputReader, FitParametersReader
+from file_reader import FileInfoReader, FitParametersReader
 from spectra_calculator import Data
 from models import Models
 from fit import FitResult
@@ -9,7 +9,7 @@ from plot_tools import define_ylim
 def plot_fitted_i_xy_dm(filename_config,fit_parameters_config):
 
     #read config file
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
 
     #read fit parameters from file

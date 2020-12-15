@@ -1,5 +1,5 @@
 import numpy as np
-from file_reader import InputReader, FitParametersReader
+from file_reader import FileInfoReader, FitParametersReader
 from fit import FitResult
 from stats import ResultSample
 
@@ -157,7 +157,7 @@ class FinalFitParameters():
 
 def final_result(filename_config,fit_parameters_config,angle_config,phase_flag):
     #read config file
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
     coord_filename = files.data + '\\coord.txt'
     dm_xy_filename = files.data + '\\dm_xy.txt'

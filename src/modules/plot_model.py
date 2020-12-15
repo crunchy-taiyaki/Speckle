@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from file_reader import InputReader, FitParametersReader
+from file_reader import FileInfoReader, FitParametersReader
 from spectra_calculator import Data
 from models import Models
 from fit import FitResult
@@ -43,7 +43,7 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\angle.txt'
 
 
-files = InputReader()
+files = FileInfoReader()
 files.read(filename_config)
 
 data = Data()

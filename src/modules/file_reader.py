@@ -1,6 +1,11 @@
-class  InputReader:
+"""Модуль содержит классы, реализующие чтение данных из текстовых (конфигурационных) файлов."""
+
+class  FileInfoReader:
+    """ Класс содержит информацию о файлах спекл-интерферометрических серий:
+    их абсолютные пути, колличество кадров в серии, а также абсолютные пути
+    к директориям с результатами работы программы."""
     def __init__(self):
-        self.star = None
+        self.star = None 
         self.dark = None        
         self.flat = None        
         self.ref = None        
@@ -14,7 +19,6 @@ class  InputReader:
 
         self.images = None
         self.data = None
-        self.work_dir = None
 
 
     def read(self,file):
@@ -40,7 +44,6 @@ class  InputReader:
 
         self.images = info[10]
         self.data = info[11]
-        self.work_dir = info[12]
 
     def write_info(self):
         print('--------------------------------------------')
@@ -60,7 +63,6 @@ class  InputReader:
 
         print('images folder',self.images)
         print('data folder',self.data)
-        print('working directory',self.work_dir)
         print('--------------------------------------------')
 
     def info(self,filename_config):

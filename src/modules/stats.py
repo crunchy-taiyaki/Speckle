@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import shapiro
-from file_reader import InputReader, FitParametersReader
+from file_reader import FileInfoReader, FitParametersReader
 from spectra_calculator import Data
 from fit import FitResult
 
@@ -45,7 +45,7 @@ class ResultSample():
 
 def define_sample(filename_config,fit_parameters_config):
     #read config file
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
 
     #read data from files
@@ -104,7 +104,7 @@ def shapiro_wilk_test(data):
 def normality_test(filename_config,fit_parameters_config):
 
     #read config file
-    files = InputReader()
+    files = FileInfoReader()
     files.read(filename_config)
 
     #read data from files
