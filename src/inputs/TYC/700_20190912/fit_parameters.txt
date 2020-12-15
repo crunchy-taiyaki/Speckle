@@ -1,5 +1,11 @@
- #flag
+#star type
 binary
+#remove background flag
+rmbg
+#type of fitting zones
+ring
+# fitting method
+standart
 #dm21
 0.1
 #dm21_bottom_border
@@ -41,8 +47,8 @@ binary
 #upper freq border
 200
 #bandwidth #5
-5
+2
 #mask bottom freq border 50-100
-50
+60
 #mask upper freq border
 120

@@ -18,7 +18,7 @@ def plot_rings_borders(x_center,y_center,r1,r2):
     plt.gcf().gca().add_artist(upper_ring)
 
 
-def to_polar(img, order=1):
+def to_polar(img, origin, max_radius, order=1):
     """
     Transform img to its polar coordinate representation.
 
@@ -28,25 +28,34 @@ def to_polar(img, order=1):
     """
     # max_radius is the length of the diagonal 
     # from a corner to the mid-point of img.
-    max_radius = 0.5*np.linalg.norm( img.shape )
 
     def transform(coords):
-        ## Put coord[1] in the interval, [-pi, pi]
-        #theta = 2*np.pi*coords[1] / (img.shape[1] - 1.)
+        # Put coord[1] in the interval, [-pi, pi]
+        theta = 2*np.pi*coords[1] / (img.shape[1] - 1.)
 
-        ## Then map it to the interval [0, max_radius].
-        #radius = max_radius * coords[0] / img.shape[0]
+        # Then map it to the interval [0, max_radius].
+        #radius = float(img.shape[0]-coords[0]) / img.shape[0] * max_radius
+        radius = max_radius * coords[0] / img.shape[0]
 
-        #i = 0.5*img.shape[0] - radius*np.sin(theta)
-        #j = radius*np.cos(theta) + 0.5*img.shape[1]
-        y = np.sqrt(coords[0]**2 + coords[1]**2)
-        x = coords[0]
-        return y,x
+        i = origin[0] + radius*np.sin(theta)
+        j = origin[1] + radius*np.cos(theta)
+        return i,j
 
     polar = geometric_transform(img, transform, order=order)
     rads = max_radius * np.linspace(0,1,img.shape[0])
-    angs = np.linspace(0, 2*np.pi, img.shape[1])*180.0/np.pi
-    return polar, (rads, angs)
+    angs = np.linspace(0, 2*np.pi, img.shape[1])
+    return polar, angs
+
+def angle_idx(max_idx,angle_in_deg):
+    angle_in_rad = angle_in_deg*np.pi/180.0
+    size = max_idx
+    angle_idx = int((size-1)*angle_in_rad/(2*np.pi) + (size-1)/2)
+    return angle_idx
+
+def radius_idx(freq):
+    radius_idx = int(freq/np.sqrt(2)) 
+    return radius_idx
+
 
 
 
