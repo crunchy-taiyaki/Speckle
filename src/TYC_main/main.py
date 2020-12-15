@@ -1,7 +1,7 @@
 
 import sys
 sys.path.insert(0, "C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\modules")
-from file_reader import InputReader
+from file_reader import FileInfoReader
 from spectra_calculator import Data
 from plot import plot_images, plot_spectra_slices
 from find_xy import guess_xy
@@ -33,7 +33,7 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #InputReader().info(filename_config)
 #Data().calc_raw_data(filename_config,size=512)
 #Data().calc_final_ps_from_raw_data(filename_config)
-plot_images(filename_config)
+#plot_images(filename_config)
 #plot_spectra_slices(filename_config)
 #guess_xy(filename_config)
 #Fit(filename_config, fit_parameters_config).fit_i_xy_dm()
