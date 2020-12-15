@@ -25,5 +25,3 @@ D:\Speckle_data\TYC1947_00290_1\20191209\dark_flat\flat700_mag16.dat
 D:\Speckle_data\TYC1947_00290_1\20191209\speckle_result_700_no_ref\images
 # store all data, arrays to folder
 D:\Speckle_data\TYC1947_00290_1\20191209\speckle_result_700_no_ref\data
-# working directory
--

@@ -9,21 +9,21 @@ standart
 #dm21
 0.1
 #dm21_bottom_border
-0.
+-
 #dm21_upper_border
-0.
-#x2 #-3.2
--3.4
+-
+#x2
+-3.2
 #x2_bottom_border
-0.
+-
 #x2_upper_border
-0.
-#y2 #-1.6
--1.5
+-
+#y2
+-1.6
 #y2_bottom_border
-0.
+-
 #y2_upper_border
-0.
+-
 #dm31
 -
 #dm31_bottom_border
