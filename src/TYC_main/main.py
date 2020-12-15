@@ -30,7 +30,7 @@ angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\
 #fit_parameters_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\fit_parameters.txt'
 #angle_config = 'C:\\Users\\Marta\\source\\repos\\crunchy-taiyaki\\Speckle\\src\\inputs\\TYC\\700_20200511_no_ref\\angle.txt'
 
-#InputReader().info(filename_config)
+#FileInfoReader().info(filename_config)
 #Data().calc_raw_data(filename_config,size=512)
 #Data().calc_final_ps_from_raw_data(filename_config)
 #plot_images(filename_config)
